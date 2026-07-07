@@ -57,8 +57,18 @@ BEGIN
         SET MESSAGE_TEXT = 'No se recibió la contraseña cifrada.';
     END IF;
 
+    IF p_nombre IS NULL OR TRIM(p_nombre) = '' OR p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
+    END IF;
+
     SELECT id_estado INTO v_id_estado_activo
     FROM estado WHERE entidad = 'usuario' AND codigo = 'activo' LIMIT 1;
+
+    IF v_id_estado_activo IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se encontró el estado "activo" en el catálogo (configuración corrupta).';
+    END IF;
 
     -- ---- Bloque transaccional (el HANDLER solo vive aquí adentro) ----
     BEGIN
@@ -122,8 +132,18 @@ BEGIN
         SET MESSAGE_TEXT = 'No se recibió la contraseña cifrada.';
     END IF;
 
+    IF p_nombre IS NULL OR TRIM(p_nombre) = '' OR p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
+    END IF;
+
     SELECT id_estado INTO v_id_estado_activo
     FROM estado WHERE entidad = 'usuario' AND codigo = 'activo' LIMIT 1;
+
+    IF v_id_estado_activo IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se encontró el estado "activo" en el catálogo (configuración corrupta).';
+    END IF;
 
     BEGIN
         DECLARE v_texto_error VARCHAR(255) DEFAULT '';
@@ -183,8 +203,18 @@ BEGIN
         SET MESSAGE_TEXT = 'No se recibió la contraseña cifrada.';
     END IF;
 
+    IF p_nombre IS NULL OR TRIM(p_nombre) = '' OR p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
+    END IF;
+
     SELECT id_estado INTO v_id_estado_activo
     FROM estado WHERE entidad = 'usuario' AND codigo = 'activo' LIMIT 1;
+
+    IF v_id_estado_activo IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se encontró el estado "activo" en el catálogo (configuración corrupta).';
+    END IF;
 
     BEGIN
         DECLARE v_texto_error VARCHAR(255) DEFAULT '';
@@ -235,6 +265,12 @@ CREATE PROCEDURE sp_login_usuario (
     OUT p_estado_codigo    VARCHAR(30)
 )
 BEGIN
+    SET p_id_usuario      = NULL;
+    SET p_password_hash   = NULL;
+    SET p_rol             = NULL;
+    SET p_nombre_completo = NULL;
+    SET p_estado_codigo   = NULL;
+
     SELECT u.id_usuario, u.password_hash, u.rol,
            CONCAT(u.nombre, ' ', u.apellido), e.codigo
     INTO p_id_usuario, p_password_hash, p_rol, p_nombre_completo, p_estado_codigo
@@ -274,6 +310,11 @@ BEGIN
         SET MESSAGE_TEXT = 'Un lector de tipo estudiante debe tener una carrera asignada.';
     END IF;
 
+    IF p_nombre IS NULL OR TRIM(p_nombre) = '' OR p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
+    END IF;
+
     BEGIN
         DECLARE v_texto_error VARCHAR(255) DEFAULT '';
 
@@ -296,11 +337,19 @@ BEGIN
             SET nombre = p_nombre, apellido = p_apellido, telefono = p_telefono
             WHERE id_usuario = p_id_usuario;
 
+            IF ROW_COUNT() = 0 THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El lector indicado no existe.';
+            END IF;
+
             UPDATE lector
             SET codigo_universitario = p_codigo_universitario,
                 id_carrera           = p_id_carrera,
                 tipo_lector          = p_tipo_lector
             WHERE id_usuario = p_id_usuario;
+
+            IF ROW_COUNT() = 0 THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El lector indicado no existe.';
+            END IF;
 
         COMMIT;
     END;
@@ -320,9 +369,19 @@ CREATE PROCEDURE sp_actualizar_bibliotecario (
     IN p_telefono   VARCHAR(20)
 )
 BEGIN
+    IF p_nombre IS NULL OR TRIM(p_nombre) = '' OR p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
+    END IF;
+
     UPDATE usuario
     SET nombre = p_nombre, apellido = p_apellido, telefono = p_telefono
     WHERE id_usuario = p_id_usuario AND rol = 'bibliotecario';
+
+    IF ROW_COUNT() = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El bibliotecario indicado no existe.';
+    END IF;
 END$$
 
 CREATE PROCEDURE sp_actualizar_administrador (
@@ -332,9 +391,19 @@ CREATE PROCEDURE sp_actualizar_administrador (
     IN p_telefono   VARCHAR(20)
 )
 BEGIN
+    IF p_nombre IS NULL OR TRIM(p_nombre) = '' OR p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
+    END IF;
+
     UPDATE usuario
     SET nombre = p_nombre, apellido = p_apellido, telefono = p_telefono
     WHERE id_usuario = p_id_usuario AND rol = 'administrador';
+
+    IF ROW_COUNT() = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El administrador indicado no existe.';
+    END IF;
 END$$
 
 
@@ -353,7 +422,17 @@ BEGIN
     SELECT id_estado INTO v_id_estado_inactivo
     FROM estado WHERE entidad = 'usuario' AND codigo = 'inactivo' LIMIT 1;
 
+    IF v_id_estado_inactivo IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se encontró el estado "inactivo" en el catálogo (configuración corrupta).';
+    END IF;
+
     UPDATE usuario SET id_estado = v_id_estado_inactivo WHERE id_usuario = p_id_usuario;
+
+    IF ROW_COUNT() = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El usuario indicado no existe.';
+    END IF;
 END$$
 
 CREATE PROCEDURE sp_activar_usuario (
@@ -365,7 +444,17 @@ BEGIN
     SELECT id_estado INTO v_id_estado_activo
     FROM estado WHERE entidad = 'usuario' AND codigo = 'activo' LIMIT 1;
 
+    IF v_id_estado_activo IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se encontró el estado "activo" en el catálogo (configuración corrupta).';
+    END IF;
+
     UPDATE usuario SET id_estado = v_id_estado_activo WHERE id_usuario = p_id_usuario;
+
+    IF ROW_COUNT() = 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El usuario indicado no existe.';
+    END IF;
 END$$
 
 
