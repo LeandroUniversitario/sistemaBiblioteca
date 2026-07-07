@@ -1,10 +1,24 @@
 package pe.edu.unp.biblioteca.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pe.edu.unp.biblioteca.dto.CarreraDTO;
+import pe.edu.unp.biblioteca.service.CarreraService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/carreras")
+@CrossOrigin(origins = "*")
 public class CarreraController {
-    // Esqueleto
+
+    @Autowired
+    private CarreraService carreraService;
+
+    @GetMapping
+    public ResponseEntity<List<CarreraDTO>> listarCarreras() {
+        List<CarreraDTO> carreras = carreraService.listarCarreras();
+        return ResponseEntity.ok(carreras);
+    }
 }

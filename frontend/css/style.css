@@ -97,7 +97,8 @@ body {
 
 /* Dashboard & Glass UI Additions */
 .dashboard-bg {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(30, 41, 59, 0.85)), url('../img/bg.png') no-repeat center center/cover;
+    background-attachment: fixed;
     color: #f8fafc;
     min-height: 100vh;
 }
@@ -145,6 +146,8 @@ body {
 }
 
 .table-glass {
+    --bs-table-bg: transparent;
+    --bs-table-color: #f8fafc;
     color: #f8fafc;
     background: transparent;
     margin-bottom: 0;
@@ -232,4 +235,74 @@ body {
 
 .book-card:hover .book-cover-placeholder {
     transform: scale(1.05);
+}
+
+/* ==========================================================================
+   Estilos personalizados para Choices.js (Glassmorphism)
+   ========================================================================== */
+.choices {
+    margin-bottom: 0;
+}
+.choices__inner {
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    color: #fff !important;
+    min-height: 48px;
+    padding-top: 5px !important;
+}
+.choices[data-type*="select-one"] .choices__inner {
+    padding-bottom: 5px !important;
+}
+.choices__list--dropdown {
+    background: rgba(30, 41, 59, 0.95) !important; /* Fondo oscuro glass */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    color: #fff !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    margin-top: 5px;
+    z-index: 1050; /* Por encima de otros elementos */
+}
+.choices__list--dropdown .choices__item--selectable {
+    padding-right: 10px !important;
+}
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+    background-color: rgba(255, 255, 255, 0.1) !important; /* Hover effect */
+    color: #fff !important;
+}
+.choices__input {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    margin-bottom: 10px !important;
+}
+.choices__input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+.choices[data-type*="select-one"]::after {
+    border-color: #fff transparent transparent transparent !important;
+}
+.choices[data-type*="select-one"].is-open::after {
+    border-color: transparent transparent #fff transparent !important;
+}
+.choices__item {
+    color: #fff !important;
+}
+.choices__placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    opacity: 1 !important;
+}
+
+/* ==========================================================================
+   Animaciones para cambio de pestañas (Tabs)
+   ========================================================================== */
+@keyframes smoothFadeIn {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.tab-transition {
+    animation: smoothFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
