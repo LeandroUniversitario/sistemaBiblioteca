@@ -1,0 +1,220 @@
+// =========================================================
+// Sistema de Gestión de Biblioteca UNIVERSITARIA - Modelo de Datos
+// Curso: Modelado de Datos
+// Versión 3 (corregida): 3 actores especializados (Lector,
+// Bibliotecario, Administrador), códigos visibles autogenerados
+// por trigger, catálogo genérico de Estados, contexto
+// universitario (Facultad/Carrera) y parametro_sistema con
+// trazabilidad de auditoría hacia Administrador.
+// Total: 17 entidades.
+//
+// CORRECCIONES aplicadas sobre la versión recibida:
+//  1. prestamo.id_bibliotecario ahora referencia
+//     bibliotecario.id_usuario (antes apuntaba a usuario en
+//     general, rompiendo la simetría con id_lector).
+//  2. lector.id_carrera ya no es NOT NULL: docentes, personal
+//     administrativo y lectores externos no necesariamente
+//     pertenecen a una carrera.
+// =========================================================
+
+Table estado {
+  id_estado   int [pk, increment]
+  entidad     varchar(30)  [not null, note: "'usuario' | 'libro' | 'ejemplar' | 'prestamo' | 'multa'"]
+  codigo      varchar(30)  [not null, note: "ej. 'activo', 'disponible', 'vencido'"]
+  descripcion varchar(100)
+
+  Indexes {
+    (entidad, codigo) [unique]
+  }
+
+  Note: "Catálogo único para todos los estados del sistema. 'entidad' acota qué códigos son válidos para cada tabla (validado en el Stored Procedure correspondiente, no a nivel de FK)."
+}
+
+Table facultad {
+  id_facultad     int [pk, increment]
+  codigo_facultad varchar(10)  [unique, note: "Autogenerado por TRIGGER AFTER INSERT, ej. 'F001'"]
+  nombre_facultad varchar(100) [not null, unique]
+}
+
+Table carrera {
+  id_carrera     int [pk, increment]
+  codigo_carrera varchar(10)  [unique, note: "Autogenerado por TRIGGER, ej. 'C001'"]
+  nombre_carrera varchar(100) [not null]
+  id_facultad    int [not null]
+
+  Indexes {
+    (nombre_carrera, id_facultad) [unique]
+  }
+
+  Note: "Una carrera pertenece a exactamente una facultad (1:N Facultad -> Carrera)."
+}
+
+Table usuario {
+  id_usuario          int [pk, increment]
+  nombre              varchar(100) [not null]
+  apellido            varchar(100) [not null]
+  email               varchar(150) [not null, unique]
+  password_hash       varchar(255) [not null]
+  rol                 varchar(20)  [not null, note: "ENUM: lector | bibliotecario | administrador (discriminador)"]
+  documento_identidad varchar(20)  [not null, unique]
+  telefono            varchar(20)
+  fecha_registro      datetime     [not null, default: `now()`]
+  id_estado           int          [not null]
+
+  Note: "Superclase de la especialización en 3 subtipos: Lector, Bibliotecario y Administrador."
+}
+
+Table lector {
+  id_usuario           int [pk, note: "PK compartida = FK -> usuario.id_usuario (1:1 especialización)"]
+  codigo_universitario varchar(20) [not null, unique]
+  id_carrera           int [note: "NULL-able: docentes/personal_administrativo/externos no siempre tienen carrera"]
+  tipo_lector          varchar(20) [not null, note: "ENUM: estudiante | docente | personal_administrativo | externo"]
+
+  Note: "Solo usuarios con rol='lector' tienen fila aquí. prestamo.id_lector referencia esta tabla, no usuario directamente."
+}
+
+Table bibliotecario {
+  id_usuario           int [pk, note: "PK compartida = FK -> usuario.id_usuario (1:1 especialización)"]
+  codigo_bibliotecario varchar(10) [unique, note: "Autogenerado por TRIGGER, ej. 'B001'"]
+
+  Note: "Solo usuarios con rol='bibliotecario' tienen fila aquí. prestamo.id_bibliotecario referencia esta tabla (corrección aplicada)."
+}
+
+Table administrador {
+  id_usuario            int [pk, note: "PK compartida = FK -> usuario.id_usuario (1:1 especialización)"]
+  codigo_administrador  varchar(10) [unique, note: "Autogenerado por TRIGGER, ej. 'A001'"]
+
+  Note: "Solo usuarios con rol='administrador' tienen fila aquí. No participa en Prestamo."
+}
+
+Table parametro_sistema {
+  id_parametro       int [pk, increment]
+  nombre_parametro   varchar(60)  [not null, unique, note: "ej. 'dias_prestamo', 'monto_multa_diario'"]
+  valor              varchar(30)  [not null]
+  descripcion        varchar(200)
+  id_administrador   int [not null]
+  fecha_modificacion datetime [not null, default: `now()`]
+
+  Note: "Configuración de negocio editable sin tocar código. id_administrador + fecha_modificacion dan trazabilidad de auditoría."
+}
+
+Table categoria {
+  id_categoria     int [pk, increment]
+  codigo_categoria varchar(10)  [unique, note: "Autogenerado por TRIGGER, ej. 'CAT001'"]
+  nombre_categoria varchar(80)  [not null, unique]
+  descripcion      varchar(255)
+}
+
+Table autor {
+  id_autor     int [pk, increment]
+  nombre       varchar(100) [not null]
+  apellido     varchar(100) [not null]
+  nacionalidad varchar(60)
+}
+
+Table libro {
+  id_libro         int [pk, increment]
+  titulo           varchar(200) [not null]
+  isbn             varchar(20)  [not null, unique]
+  id_categoria     int [not null]
+  anio_publicacion int
+  editorial        varchar(100)
+  id_estado        int [not null]
+
+  Note: "Representa el título/obra en abstracto, NO el objeto físico."
+}
+
+Table libro_autor {
+  id_libro int [not null]
+  id_autor int [not null]
+
+  Indexes {
+    (id_libro, id_autor) [pk]
+  }
+
+  Note: "Tabla puente para la relación N:M Libro-Autor."
+}
+
+Table ejemplar {
+  id_ejemplar     int [pk, increment]
+  id_libro        int [not null]
+  codigo_ejemplar varchar(30) [not null, unique]
+  id_estado       int [not null]
+  ubicacion       varchar(50)
+
+  Note: "Copia física de un libro."
+}
+
+Table prestamo {
+  id_prestamo       int [pk, increment]
+  id_ejemplar       int [not null]
+  id_lector         int [not null, note: "FK -> lector.id_usuario"]
+  id_bibliotecario  int [not null, note: "FK -> bibliotecario.id_usuario (corregido)"]
+  fecha_prestamo    datetime [not null, default: `now()`]
+  fecha_limite      datetime [not null]
+  fecha_devolucion  datetime
+  id_estado         int [not null]
+
+  Note: "id_lector e id_bibliotecario apuntan cada uno a su tabla especializada, no a usuario en general."
+}
+
+Table multa {
+  id_multa         int [pk, increment]
+  id_prestamo      int [not null, unique]
+  monto            decimal(6,2) [not null]
+  fecha_generacion datetime [not null, default: `now()`]
+  id_estado        int [not null]
+  fecha_pago       datetime
+}
+
+Table comprobante_prestamo {
+  id_comprobante       int [pk, increment]
+  numero_comprobante   varchar(20) [not null, unique]
+  id_prestamo          int [not null, unique]
+  nombre_lector        varchar(200) [not null]
+  documento_lector     varchar(20) [not null]
+  titulo_libro         varchar(200) [not null]
+  codigo_ejemplar      varchar(30) [not null]
+  nombre_bibliotecario varchar(200) [not null]
+  fecha_prestamo       datetime [not null]
+  fecha_limite         datetime [not null]
+  fecha_emision        datetime [not null, default: `now()`]
+}
+
+Table comprobante_pago_multa {
+  id_comprobante       int [pk, increment]
+  numero_comprobante   varchar(20) [not null, unique]
+  id_multa             int [not null, unique]
+  nombre_lector        varchar(200) [not null]
+  documento_lector     varchar(20) [not null]
+  concepto             varchar(255) [not null]
+  monto                decimal(6,2) [not null]
+  nombre_bibliotecario varchar(200) [not null]
+  fecha_pago           datetime [not null]
+  fecha_emision        datetime [not null, default: `now()`]
+}
+
+// =========================================================
+// Relaciones
+// =========================================================
+Ref: usuario.id_estado > estado.id_estado
+Ref: lector.id_usuario - usuario.id_usuario
+Ref: bibliotecario.id_usuario - usuario.id_usuario
+Ref: administrador.id_usuario - usuario.id_usuario
+Ref: lector.id_carrera > carrera.id_carrera
+Ref: carrera.id_facultad > facultad.id_facultad
+Ref: parametro_sistema.id_administrador > administrador.id_usuario
+Ref: libro.id_categoria > categoria.id_categoria
+Ref: libro.id_estado > estado.id_estado
+Ref: libro_autor.id_libro > libro.id_libro
+Ref: libro_autor.id_autor > autor.id_autor
+Ref: ejemplar.id_libro > libro.id_libro
+Ref: ejemplar.id_estado > estado.id_estado
+Ref: prestamo.id_ejemplar > ejemplar.id_ejemplar
+Ref: prestamo.id_lector > lector.id_usuario
+Ref: prestamo.id_bibliotecario > bibliotecario.id_usuario
+Ref: prestamo.id_estado > estado.id_estado
+Ref: multa.id_prestamo - prestamo.id_prestamo
+Ref: multa.id_estado > estado.id_estado
+Ref: comprobante_prestamo.id_prestamo - prestamo.id_prestamo
+Ref: comprobante_pago_multa.id_multa - multa.id_multa

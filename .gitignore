@@ -1,0 +1,7 @@
+backend/target/
+backend/maven.zip
+backend/apache-maven-*/
+.idea/
+.vscode/
+*.log
+.DS_Store
