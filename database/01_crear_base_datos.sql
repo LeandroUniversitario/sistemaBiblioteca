@@ -57,7 +57,9 @@ INSERT INTO estado (entidad, codigo, descripcion) VALUES
 CREATE TABLE facultad (
     id_facultad     INT AUTO_INCREMENT PRIMARY KEY,
     codigo_facultad VARCHAR(10) NULL UNIQUE,
-    nombre_facultad VARCHAR(100) NOT NULL UNIQUE
+    nombre_facultad VARCHAR(100) NOT NULL UNIQUE,
+    abreviatura     VARCHAR(10) NULL,
+    estado          VARCHAR(20) DEFAULT 'Activo'
 ) ENGINE = InnoDB;
 
 -- =========================================================

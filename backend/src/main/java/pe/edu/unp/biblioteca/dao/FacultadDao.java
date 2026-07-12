@@ -27,7 +27,9 @@ public class FacultadDao {
                 .withProcedureName("sp_insertar_facultad");
 
         SqlParameterSource in = new MapSqlParameterSource()
-                .addValue("p_nombre_facultad", facultad.getNombreFacultad());
+                .addValue("p_nombre_facultad", facultad.getNombreFacultad())
+                .addValue("p_abreviatura", facultad.getAbreviatura())
+                .addValue("p_estado", facultad.getEstado());
 
         Map<String, Object> out = jdbcCall.execute(in);
 
@@ -43,7 +45,9 @@ public class FacultadDao {
 
         SqlParameterSource in = new MapSqlParameterSource()
                 .addValue("p_id_facultad", facultad.getIdFacultad())
-                .addValue("p_nombre_facultad", facultad.getNombreFacultad());
+                .addValue("p_nombre_facultad", facultad.getNombreFacultad())
+                .addValue("p_abreviatura", facultad.getAbreviatura())
+                .addValue("p_estado", facultad.getEstado());
 
         jdbcCall.execute(in);
     }
@@ -92,7 +96,9 @@ public class FacultadDao {
             return new FacultadDTO(
                     rs.getInt("id_facultad"),
                     rs.getString("codigo_facultad"),
-                    rs.getString("nombre_facultad")
+                    rs.getString("nombre_facultad"),
+                    rs.getString("abreviatura"),
+                    rs.getString("estado")
             );
         }
     }

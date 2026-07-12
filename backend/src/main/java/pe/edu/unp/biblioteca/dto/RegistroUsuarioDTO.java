@@ -1,7 +1,12 @@
 package pe.edu.unp.biblioteca.dto;
 
 public class RegistroUsuarioDTO {
+    private Integer idUsuario;
     private String nombre;
+    
+    public Integer getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
+
     private String apellido;
     private String email;
     private String password;

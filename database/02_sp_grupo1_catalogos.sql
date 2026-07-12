@@ -18,6 +18,8 @@ DELIMITER $$
 
 CREATE PROCEDURE sp_insertar_facultad (
     IN  p_nombre_facultad VARCHAR(100),
+    IN  p_abreviatura     VARCHAR(10),
+    IN  p_estado          VARCHAR(20),
     OUT p_id_facultad     INT,
     OUT p_codigo_facultad VARCHAR(10)
 )
@@ -33,7 +35,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Debe ingresar el nombre de la facultad.';
     END IF;
 
-    INSERT INTO facultad (nombre_facultad) VALUES (p_nombre_facultad);
+    INSERT INTO facultad (nombre_facultad, abreviatura, estado) VALUES (p_nombre_facultad, p_abreviatura, COALESCE(p_estado, 'Activo'));
 
     SET p_id_facultad = LAST_INSERT_ID();
     SET p_codigo_facultad = CONCAT('F', LPAD(p_id_facultad, 3, '0'));
@@ -44,8 +46,10 @@ BEGIN
 END$$
 
 CREATE PROCEDURE sp_actualizar_facultad (
-    IN p_id_facultad     INT,
-    IN p_nombre_facultad  VARCHAR(100)
+    IN p_id_facultad      INT,
+    IN p_nombre_facultad  VARCHAR(100),
+    IN p_abreviatura      VARCHAR(10),
+    IN p_estado           VARCHAR(20)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR 1062
@@ -65,7 +69,9 @@ BEGIN
     END IF;
 
     UPDATE facultad
-    SET nombre_facultad = p_nombre_facultad
+    SET nombre_facultad = p_nombre_facultad,
+        abreviatura = p_abreviatura,
+        estado = COALESCE(p_estado, estado)
     WHERE id_facultad = p_id_facultad;
 END$$
 
@@ -89,7 +95,7 @@ END$$
 
 CREATE PROCEDURE sp_listar_facultades ()
 BEGIN
-    SELECT id_facultad, codigo_facultad, nombre_facultad
+    SELECT id_facultad, codigo_facultad, nombre_facultad, abreviatura, estado
     FROM facultad
     ORDER BY nombre_facultad;
 END$$
@@ -98,7 +104,7 @@ CREATE PROCEDURE sp_obtener_facultad_por_id (
     IN p_id_facultad INT
 )
 BEGIN
-    SELECT id_facultad, codigo_facultad, nombre_facultad
+    SELECT id_facultad, codigo_facultad, nombre_facultad, abreviatura, estado
     FROM facultad
     WHERE id_facultad = p_id_facultad;
 END$$
@@ -335,6 +341,8 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido del autor.';
     END IF;
+    SET p_nombre = TRIM(p_nombre);
+    SET p_apellido = TRIM(p_apellido);
 
     INSERT INTO autor (nombre, apellido, nacionalidad)
     VALUES (p_nombre, p_apellido, p_nacionalidad);
@@ -358,6 +366,8 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido del autor.';
     END IF;
+    SET p_nombre = TRIM(p_nombre);
+    SET p_apellido = TRIM(p_apellido);
 
     UPDATE autor
     SET nombre       = p_nombre,

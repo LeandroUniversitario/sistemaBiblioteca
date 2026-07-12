@@ -1,0 +1,132 @@
+let modalFacultadInstance;
+let modalEliminarInstance;
+
+document.addEventListener('DOMContentLoaded', () => {
+    cargarEstadisticas();
+    cargarFacultades();
+    modalFacultadInstance = new bootstrap.Modal(document.getElementById('modalFacultad'));
+    modalEliminarInstance = new bootstrap.Modal(document.getElementById('modalEliminarFacultad'));
+});
+
+async function cargarFacultades() {
+    const tbody = document.getElementById('tbodyFacultades');
+    try {
+        const facultades = await fetchApi('/facultades');
+        
+        if (!facultades || facultades.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-white-50 py-3">No hay facultades registradas</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = '';
+        facultades.forEach(fac => {
+            const estadoTexto = fac.estado || 'Activo';
+            const estadoBadge = estadoTexto.toLowerCase() === 'activo' 
+                ? '<span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-2 py-1">Activo</span>'
+                : '<span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50 px-2 py-1">Inactivo</span>';
+
+            const abreviatura = fac.abreviatura ? fac.abreviatura : '-';
+            const codigo = fac.codigoFacultad ? fac.codigoFacultad : '#FAC-' + fac.idFacultad;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${codigo}</td>
+                <td>${fac.nombreFacultad}</td>
+                <td>${abreviatura}</td>
+                <td>${estadoBadge}</td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-outline-info border-0 hover-glow" onclick="editarFacultad(${fac.idFacultad})" title="Editar"><i class="bi bi-pencil"></i></button>
+                    <button class="btn btn-sm btn-outline-danger border-0 hover-glow" onclick="eliminarFacultad(${fac.idFacultad})" title="Eliminar"><i class="bi bi-trash"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-3">Error al cargar las facultades</td></tr>`;
+        console.error('Error cargando facultades:', error);
+    }
+}
+
+async function cargarEstadisticas() {
+    try {
+        const stats = await fetchApi('/dashboard/stats');
+        if (stats) {
+            document.getElementById('countFacultades').innerText = stats.facultades || 0;
+            document.getElementById('countCarreras').innerText = stats.carreras || 0;
+            document.getElementById('countUsuarios').innerText = stats.usuarios || 0;
+        }
+    } catch (error) {
+        console.error('Error cargando estadísticas:', error);
+    }
+}
+
+function abrirModalFacultad() {
+    document.getElementById('formFacultad').reset();
+    document.getElementById('facultadId').value = '';
+    document.getElementById('modalFacultadTitle').innerText = 'Nueva Facultad';
+    modalFacultadInstance.show();
+}
+
+async function editarFacultad(id) {
+    try {
+        const fac = await fetchApi(`/facultades/${id}`);
+        document.getElementById('facultadId').value = fac.idFacultad;
+        document.getElementById('facultadNombre').value = fac.nombreFacultad;
+        document.getElementById('facultadAbreviatura').value = fac.abreviatura || '';
+        document.getElementById('facultadEstado').value = fac.estado || 'Activo';
+        
+        document.getElementById('modalFacultadTitle').innerText = 'Editar Facultad';
+        modalFacultadInstance.show();
+    } catch (error) {
+        alert('Error al cargar datos de la facultad');
+    }
+}
+
+async function guardarFacultad() {
+    const id = document.getElementById('facultadId').value;
+    const nombre = document.getElementById('facultadNombre').value;
+    const abreviatura = document.getElementById('facultadAbreviatura').value;
+    const estado = document.getElementById('facultadEstado').value;
+
+    if (!nombre) {
+        alert('El nombre es obligatorio');
+        return;
+    }
+
+    const payload = {
+        nombreFacultad: nombre,
+        abreviatura: abreviatura,
+        estado: estado
+    };
+
+    try {
+        if (id) {
+            // Actualizar
+            payload.idFacultad = parseInt(id);
+            await fetchApi(`/facultades/${id}`, 'PUT', payload);
+        } else {
+            // Crear
+            await fetchApi('/facultades', 'POST', payload);
+        }
+        modalFacultadInstance.hide();
+        cargarFacultades();
+    } catch (error) {
+        alert('Error al guardar: ' + error.message);
+    }
+}
+
+function eliminarFacultad(id) {
+    document.getElementById('facultadEliminarId').value = id;
+    modalEliminarInstance.show();
+}
+
+async function confirmarEliminarFacultad() {
+    const id = document.getElementById('facultadEliminarId').value;
+    try {
+        await fetchApi(`/facultades/${id}`, 'DELETE');
+        modalEliminarInstance.hide();
+        cargarFacultades();
+    } catch (error) {
+        alert('Error al eliminar: ' + (error.message || 'Error desconocido'));
+    }
+}

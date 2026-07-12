@@ -7,6 +7,7 @@ import pe.edu.unp.biblioteca.dao.UsuarioDao;
 import pe.edu.unp.biblioteca.dto.GenericResponseDTO;
 import pe.edu.unp.biblioteca.dto.RegistroUsuarioDTO;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -59,5 +60,48 @@ public class UsuarioService {
         }
 
         return response;
+    }
+
+    public List<pe.edu.unp.biblioteca.dto.UsuarioListDTO> listarTodos() {
+        return usuarioDao.listarTodos();
+    }
+
+    public pe.edu.unp.biblioteca.dto.UsuarioListDTO obtenerPorId(Integer id, String rol) {
+        return usuarioDao.obtenerPorId(id, rol);
+    }
+
+    public GenericResponseDTO actualizarUsuario(RegistroUsuarioDTO dto) {
+        try {
+            if (dto.getRol() == null) {
+                return new GenericResponseDTO(false, "Rol no especificado para actualizar.");
+            }
+            
+            String rol = dto.getRol().toLowerCase();
+            if (rol.equals("administrador")) {
+                usuarioDao.actualizarAdministrador(dto);
+            } else if (rol.equals("bibliotecario")) {
+                usuarioDao.actualizarBibliotecario(dto);
+            } else if (rol.equals("lector")) {
+                usuarioDao.actualizarLector(dto);
+            } else {
+                return new GenericResponseDTO(false, "Rol no válido.");
+            }
+            return new GenericResponseDTO(true, "Usuario actualizado correctamente.");
+        } catch (Exception e) {
+            String errorMsg = e.getMessage();
+            if (errorMsg != null && errorMsg.contains("MESSAGE_TEXT")) {
+                return new GenericResponseDTO(false, "Error al actualizar: Revisar datos o duplicados.");
+            }
+            return new GenericResponseDTO(false, "Error de servidor: " + e.getMessage());
+        }
+    }
+
+    public GenericResponseDTO cambiarEstado(Integer id, String accion) {
+        try {
+            usuarioDao.cambiarEstado(id, accion);
+            return new GenericResponseDTO(true, "Estado actualizado correctamente.");
+        } catch (Exception e) {
+            return new GenericResponseDTO(false, "Error: " + e.getMessage());
+        }
     }
 }

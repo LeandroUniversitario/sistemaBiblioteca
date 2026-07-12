@@ -61,6 +61,9 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
     END IF;
+    SET p_nombre = TRIM(p_nombre);
+    SET p_apellido = TRIM(p_apellido);
+    SET p_email = TRIM(p_email);
 
     SELECT id_estado INTO v_id_estado_activo
     FROM estado WHERE entidad = 'usuario' AND codigo = 'activo' LIMIT 1;
@@ -136,6 +139,9 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
     END IF;
+    SET p_nombre = TRIM(p_nombre);
+    SET p_apellido = TRIM(p_apellido);
+    SET p_email = TRIM(p_email);
 
     SELECT id_estado INTO v_id_estado_activo
     FROM estado WHERE entidad = 'usuario' AND codigo = 'activo' LIMIT 1;
@@ -207,6 +213,9 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
     END IF;
+    SET p_nombre = TRIM(p_nombre);
+    SET p_apellido = TRIM(p_apellido);
+    SET p_email = TRIM(p_email);
 
     SELECT id_estado INTO v_id_estado_activo
     FROM estado WHERE entidad = 'usuario' AND codigo = 'activo' LIMIT 1;
@@ -314,6 +323,13 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
     END IF;
+    
+    SET p_nombre = TRIM(p_nombre);
+    SET p_apellido = TRIM(p_apellido);
+
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE id_usuario = p_id_usuario AND rol = 'lector') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El lector indicado no existe.';
+    END IF;
 
     BEGIN
         DECLARE v_texto_error VARCHAR(255) DEFAULT '';
@@ -337,19 +353,11 @@ BEGIN
             SET nombre = p_nombre, apellido = p_apellido, telefono = p_telefono
             WHERE id_usuario = p_id_usuario;
 
-            IF ROW_COUNT() = 0 THEN
-                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El lector indicado no existe.';
-            END IF;
-
             UPDATE lector
             SET codigo_universitario = p_codigo_universitario,
                 id_carrera           = p_id_carrera,
                 tipo_lector          = p_tipo_lector
             WHERE id_usuario = p_id_usuario;
-
-            IF ROW_COUNT() = 0 THEN
-                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El lector indicado no existe.';
-            END IF;
 
         COMMIT;
     END;
@@ -373,15 +381,16 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
     END IF;
+    SET p_nombre = TRIM(p_nombre);
+    SET p_apellido = TRIM(p_apellido);
+
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE id_usuario = p_id_usuario AND rol = 'bibliotecario') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El bibliotecario indicado no existe.';
+    END IF;
 
     UPDATE usuario
     SET nombre = p_nombre, apellido = p_apellido, telefono = p_telefono
     WHERE id_usuario = p_id_usuario AND rol = 'bibliotecario';
-
-    IF ROW_COUNT() = 0 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'El bibliotecario indicado no existe.';
-    END IF;
 END$$
 
 CREATE PROCEDURE sp_actualizar_administrador (
@@ -395,15 +404,16 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'Debe ingresar nombre y apellido.';
     END IF;
+    SET p_nombre = TRIM(p_nombre);
+    SET p_apellido = TRIM(p_apellido);
+
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE id_usuario = p_id_usuario AND rol = 'administrador') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El administrador indicado no existe.';
+    END IF;
 
     UPDATE usuario
     SET nombre = p_nombre, apellido = p_apellido, telefono = p_telefono
     WHERE id_usuario = p_id_usuario AND rol = 'administrador';
-
-    IF ROW_COUNT() = 0 THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'El administrador indicado no existe.';
-    END IF;
 END$$
 
 
@@ -509,6 +519,30 @@ BEGIN
     INNER JOIN administrador a ON a.id_usuario = u.id_usuario
     INNER JOIN estado e ON e.id_estado = u.id_estado
     ORDER BY u.apellido, u.nombre;
+END$$
+
+CREATE PROCEDURE sp_obtener_bibliotecario_por_id (
+    IN p_id_usuario INT
+)
+BEGIN
+    SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.documento_identidad,
+           u.telefono, e.codigo AS estado, b.codigo_bibliotecario
+    FROM usuario u
+    INNER JOIN bibliotecario b ON b.id_usuario = u.id_usuario
+    INNER JOIN estado e ON e.id_estado = u.id_estado
+    WHERE u.id_usuario = p_id_usuario;
+END$$
+
+CREATE PROCEDURE sp_obtener_administrador_por_id (
+    IN p_id_usuario INT
+)
+BEGIN
+    SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.documento_identidad,
+           u.telefono, e.codigo AS estado, a.codigo_administrador
+    FROM usuario u
+    INNER JOIN administrador a ON a.id_usuario = u.id_usuario
+    INNER JOIN estado e ON e.id_estado = u.id_estado
+    WHERE u.id_usuario = p_id_usuario;
 END$$
 
 DELIMITER ;
