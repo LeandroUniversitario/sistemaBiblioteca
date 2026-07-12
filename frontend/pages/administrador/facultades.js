@@ -6,6 +6,23 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarFacultades();
     modalFacultadInstance = new bootstrap.Modal(document.getElementById('modalFacultad'));
     modalEliminarInstance = new bootstrap.Modal(document.getElementById('modalEliminarFacultad'));
+    
+    // Navegación
+    const linkFacultades = document.getElementById('linkFacultades');
+    const panelFacultades = document.getElementById('panelFacultades');
+    if (linkFacultades) {
+        linkFacultades.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active', 'fw-semibold'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.add('text-light-50'));
+            
+            linkFacultades.classList.add('active', 'fw-semibold');
+            linkFacultades.classList.remove('text-light-50');
+            
+            document.querySelectorAll('.tab-transition').forEach(el => el.classList.add('d-none'));
+            panelFacultades.classList.remove('d-none');
+        });
+    }
 });
 
 async function cargarFacultades() {

@@ -104,4 +104,21 @@ public class UsuarioService {
             return new GenericResponseDTO(false, "Error: " + e.getMessage());
         }
     }
+
+    public GenericResponseDTO cambiarPassword(Integer id, String nuevaPassword) {
+        try {
+            if (nuevaPassword == null || nuevaPassword.trim().isEmpty()) {
+                return new GenericResponseDTO(false, "La contraseña no puede estar vacía.");
+            }
+            String hashedPassword = BCrypt.hashpw(nuevaPassword, BCrypt.gensalt(12));
+            int rows = usuarioDao.cambiarPassword(id, hashedPassword);
+            if (rows > 0) {
+                return new GenericResponseDTO(true, "Contraseña actualizada correctamente.");
+            } else {
+                return new GenericResponseDTO(false, "No se encontró el usuario indicado.");
+            }
+        } catch (Exception e) {
+            return new GenericResponseDTO(false, "Error de servidor: " + e.getMessage());
+        }
+    }
 }

@@ -158,4 +158,9 @@ public class UsuarioDao {
         MapSqlParameterSource in = new MapSqlParameterSource().addValue("p_id_usuario", idUsuario);
         jdbcCall.execute(in);
     }
+
+    public int cambiarPassword(Integer idUsuario, String newPasswordHash) {
+        String sql = "UPDATE usuario SET password_hash = ? WHERE id_usuario = ?";
+        return jdbcTemplate.update(sql, newPasswordHash, idUsuario);
+    }
 }

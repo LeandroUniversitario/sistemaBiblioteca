@@ -1,11 +1,13 @@
 let choicesCarrera = null;
 let modalUsuarioInstance;
 let modalEstadoUsuarioInstance;
+let modalCambiarPasswordInstance;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Inicializar modals
     modalUsuarioInstance = new bootstrap.Modal(document.getElementById('modalUsuario'));
     modalEstadoUsuarioInstance = new bootstrap.Modal(document.getElementById('modalEstadoUsuario'));
+    modalCambiarPasswordInstance = new bootstrap.Modal(document.getElementById('modalCambiarPassword'));
 
     // Navegación (Mejorada para manejar todas las pestañas)
     const linkUsuarios = document.getElementById('linkUsuarios');
@@ -100,6 +102,7 @@ async function cargarUsuarios() {
                 <td><span class="text-capitalize">${u.rol}</span></td>
                 <td>${estadoBadge}</td>
                 <td class="text-end">
+                    <button class="btn btn-sm btn-outline-warning border-0 hover-glow" onclick="abrirModalPassword(${u.idUsuario})" title="Cambiar Contraseña"><i class="bi bi-key"></i></button>
                     <button class="btn btn-sm btn-outline-info border-0 hover-glow" onclick="editarUsuario(${u.idUsuario}, '${u.rol}')" title="Editar"><i class="bi bi-pencil"></i></button>
                     <button class="btn btn-sm ${colorEstado} border-0 hover-glow" onclick="abrirModalEstadoUsuario(${u.idUsuario}, '${esActivo ? 'desactivar' : 'activar'}')" title="${titleEstado}"><i class="bi ${iconEstado}"></i></button>
                 </td>
@@ -277,5 +280,46 @@ async function confirmarCambiarEstadoUsuario() {
         if (typeof cargarEstadisticas === 'function') cargarEstadisticas();
     } catch (error) {
         alert('Error al cambiar el estado: ' + error.message);
+    }
+}
+
+function abrirModalPassword(id) {
+    document.getElementById('passwordUsuarioId').value = id;
+    document.getElementById('nuevaPassword').value = '';
+    const alertEl = document.getElementById('passwordAlert');
+    alertEl.classList.add('d-none');
+    alertEl.classList.remove('alert-success', 'alert-danger');
+    modalCambiarPasswordInstance.show();
+}
+
+async function guardarNuevaPassword() {
+    const id = document.getElementById('passwordUsuarioId').value;
+    const nuevaPassword = document.getElementById('nuevaPassword').value;
+    const alertEl = document.getElementById('passwordAlert');
+    
+    if (!nuevaPassword) {
+        alertEl.textContent = 'Debes ingresar una contraseña.';
+        alertEl.classList.add('alert-danger');
+        alertEl.classList.remove('d-none');
+        return;
+    }
+    
+    alertEl.classList.add('d-none');
+    
+    try {
+        const res = await fetchApi(`/usuarios/${id}/password`, 'PUT', { password: nuevaPassword });
+        alertEl.textContent = res.message || 'Contraseña actualizada.';
+        alertEl.classList.remove('alert-danger');
+        alertEl.classList.add('alert-success');
+        alertEl.classList.remove('d-none');
+        
+        setTimeout(() => {
+            modalCambiarPasswordInstance.hide();
+        }, 1500);
+    } catch (error) {
+        alertEl.textContent = error.message || 'Error al actualizar.';
+        alertEl.classList.remove('alert-success');
+        alertEl.classList.add('alert-danger');
+        alertEl.classList.remove('d-none');
     }
 }

@@ -59,4 +59,14 @@ public class UsuarioController {
         }
         return ResponseEntity.badRequest().body(response);
     }
+
+    @PutMapping("/{id}/password")
+    public ResponseEntity<GenericResponseDTO> cambiarPassword(@PathVariable Integer id, @RequestBody java.util.Map<String, String> body) {
+        String nuevaPassword = body.get("password");
+        GenericResponseDTO response = usuarioService.cambiarPassword(id, nuevaPassword);
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.badRequest().body(response);
+    }
 }
