@@ -16,10 +16,9 @@ DELIMITER $$
 -- FACULTAD
 -- =========================================================
 
+DROP PROCEDURE IF EXISTS sp_insertar_facultad$$
 CREATE PROCEDURE sp_insertar_facultad (
     IN  p_nombre_facultad VARCHAR(100),
-    IN  p_abreviatura     VARCHAR(10),
-    IN  p_estado          VARCHAR(20),
     OUT p_id_facultad     INT,
     OUT p_codigo_facultad VARCHAR(10)
 )
@@ -35,7 +34,7 @@ BEGIN
         SET MESSAGE_TEXT = 'Debe ingresar el nombre de la facultad.';
     END IF;
 
-    INSERT INTO facultad (nombre_facultad, abreviatura, estado) VALUES (p_nombre_facultad, p_abreviatura, COALESCE(p_estado, 'Activo'));
+    INSERT INTO facultad (nombre_facultad) VALUES (p_nombre_facultad);
 
     SET p_id_facultad = LAST_INSERT_ID();
     SET p_codigo_facultad = CONCAT('F', LPAD(p_id_facultad, 3, '0'));
@@ -45,11 +44,10 @@ BEGIN
     WHERE id_facultad = p_id_facultad;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_actualizar_facultad$$
 CREATE PROCEDURE sp_actualizar_facultad (
     IN p_id_facultad      INT,
-    IN p_nombre_facultad  VARCHAR(100),
-    IN p_abreviatura      VARCHAR(10),
-    IN p_estado           VARCHAR(20)
+    IN p_nombre_facultad  VARCHAR(100)
 )
 BEGIN
     DECLARE EXIT HANDLER FOR 1062
@@ -69,12 +67,11 @@ BEGIN
     END IF;
 
     UPDATE facultad
-    SET nombre_facultad = p_nombre_facultad,
-        abreviatura = p_abreviatura,
-        estado = COALESCE(p_estado, estado)
+    SET nombre_facultad = p_nombre_facultad
     WHERE id_facultad = p_id_facultad;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_eliminar_facultad$$
 CREATE PROCEDURE sp_eliminar_facultad (
     IN p_id_facultad INT
 )
@@ -93,18 +90,20 @@ BEGIN
     DELETE FROM facultad WHERE id_facultad = p_id_facultad;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_listar_facultades$$
 CREATE PROCEDURE sp_listar_facultades ()
 BEGIN
-    SELECT id_facultad, codigo_facultad, nombre_facultad, abreviatura, estado
+    SELECT id_facultad, codigo_facultad, nombre_facultad
     FROM facultad
     ORDER BY nombre_facultad;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_obtener_facultad_por_id$$
 CREATE PROCEDURE sp_obtener_facultad_por_id (
     IN p_id_facultad INT
 )
 BEGIN
-    SELECT id_facultad, codigo_facultad, nombre_facultad, abreviatura, estado
+    SELECT id_facultad, codigo_facultad, nombre_facultad
     FROM facultad
     WHERE id_facultad = p_id_facultad;
 END$$
@@ -114,6 +113,7 @@ END$$
 -- CARRERA
 -- =========================================================
 
+DROP PROCEDURE IF EXISTS sp_insertar_carrera$$
 CREATE PROCEDURE sp_insertar_carrera (
     IN  p_nombre_carrera VARCHAR(100),
     IN  p_id_facultad    INT,
@@ -149,6 +149,7 @@ BEGIN
     WHERE id_carrera = p_id_carrera;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_actualizar_carrera$$
 CREATE PROCEDURE sp_actualizar_carrera (
     IN p_id_carrera    INT,
     IN p_nombre_carrera VARCHAR(100),
@@ -183,6 +184,7 @@ BEGIN
     WHERE id_carrera = p_id_carrera;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_eliminar_carrera$$
 CREATE PROCEDURE sp_eliminar_carrera (
     IN p_id_carrera INT
 )
@@ -201,6 +203,7 @@ BEGIN
     DELETE FROM carrera WHERE id_carrera = p_id_carrera;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_listar_carreras$$
 CREATE PROCEDURE sp_listar_carreras ()
 BEGIN
     -- JOIN para mostrar el nombre de la facultad, no solo su id
@@ -211,6 +214,7 @@ BEGIN
     ORDER BY f.nombre_facultad, c.nombre_carrera;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_listar_carreras_por_facultad$$
 CREATE PROCEDURE sp_listar_carreras_por_facultad (
     IN p_id_facultad INT
 )
@@ -220,6 +224,7 @@ BEGIN
     WHERE id_facultad = p_id_facultad
     ORDER BY nombre_carrera;
 END$$
+DROP PROCEDURE IF EXISTS sp_obtener_carrera_por_id$$
 CREATE PROCEDURE sp_obtener_carrera_por_id (
     IN p_id_carrera INT
 )
@@ -235,6 +240,7 @@ END$$
 -- CATEGORIA
 -- =========================================================
 
+DROP PROCEDURE IF EXISTS sp_insertar_categoria$$
 CREATE PROCEDURE sp_insertar_categoria (
     IN  p_nombre_categoria VARCHAR(80),
     IN  p_descripcion      VARCHAR(255),
@@ -264,6 +270,7 @@ BEGIN
     WHERE id_categoria = p_id_categoria;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_actualizar_categoria$$
 CREATE PROCEDURE sp_actualizar_categoria (
     IN p_id_categoria     INT,
     IN p_nombre_categoria VARCHAR(80),
@@ -292,6 +299,7 @@ BEGIN
     WHERE id_categoria = p_id_categoria;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_eliminar_categoria$$
 CREATE PROCEDURE sp_eliminar_categoria (
     IN p_id_categoria INT
 )
@@ -310,6 +318,7 @@ BEGIN
     DELETE FROM categoria WHERE id_categoria = p_id_categoria;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_listar_categorias$$
 CREATE PROCEDURE sp_listar_categorias ()
 BEGIN
     SELECT id_categoria, codigo_categoria, nombre_categoria, descripcion
@@ -317,6 +326,7 @@ BEGIN
     ORDER BY nombre_categoria;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_obtener_categoria_por_id$$
 CREATE PROCEDURE sp_obtener_categoria_por_id (
     IN p_id_categoria INT
 )
@@ -330,6 +340,7 @@ END$$
 -- AUTOR
 -- =========================================================
 
+DROP PROCEDURE IF EXISTS sp_insertar_autor$$
 CREATE PROCEDURE sp_insertar_autor (
     IN  p_nombre       VARCHAR(100),
     IN  p_apellido     VARCHAR(100),
@@ -350,6 +361,7 @@ BEGIN
     SET p_id_autor = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS sp_actualizar_autor$$
 CREATE PROCEDURE sp_actualizar_autor (
     IN p_id_autor     INT,
     IN p_nombre       VARCHAR(100),
@@ -376,6 +388,7 @@ BEGIN
     WHERE id_autor = p_id_autor;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_eliminar_autor$$
 CREATE PROCEDURE sp_eliminar_autor (
     IN p_id_autor INT
 )
@@ -394,6 +407,7 @@ BEGIN
     DELETE FROM autor WHERE id_autor = p_id_autor;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_listar_autores$$
 CREATE PROCEDURE sp_listar_autores ()
 BEGIN
     SELECT id_autor, nombre, apellido, nacionalidad
@@ -401,6 +415,7 @@ BEGIN
     ORDER BY apellido, nombre;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_buscar_autores_por_apellido$$
 CREATE PROCEDURE sp_buscar_autores_por_apellido (
     IN p_apellido VARCHAR(100)
 )
@@ -412,6 +427,7 @@ BEGIN
     ORDER BY apellido, nombre;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_obtener_autor_por_id$$
 CREATE PROCEDURE sp_obtener_autor_por_id (
     IN p_id_autor INT
 )

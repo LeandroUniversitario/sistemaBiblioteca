@@ -26,13 +26,19 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active fw-semibold" href="#"><i class="bi bi-book me-1"></i> Catálogo</a>
+          <a class="nav-link active fw-semibold" href="#" id="linkDashboard"><i class="bi bi-house me-1"></i> Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light-50 hover-glow" href="#" id="linkCategorias"><i class="bi bi-tags me-1"></i> Categorías</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light-50 hover-glow" href="#" id="linkAutores"><i class="bi bi-person-lines-fill me-1"></i> Autores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light-50 hover-glow" href="#" id="linkLibros"><i class="bi bi-book me-1"></i> Libros</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-light-50 hover-glow" href="#"><i class="bi bi-arrow-left-right me-1"></i> Préstamos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light-50 hover-glow" href="#"><i class="bi bi-clock-history me-1"></i> Devoluciones</a>
         </li>
       </ul>
       <div class="d-flex align-items-center gap-3">
@@ -47,7 +53,8 @@
   </div>
 </nav>
 
-<div class="container mt-5 fade-in-up">
+<!-- SECCION DASHBOARD -->
+<div id="seccionDashboard" class="container mt-5 fade-in-up">
     <h2 class="page-title">Gestión de Biblioteca</h2>
     
     <div class="row g-4 mt-2 mb-5">
@@ -127,9 +134,131 @@
     </div>
 </div>
 
+<!-- SECCION CATEGORIAS -->
+<div id="seccionCategorias" class="container mt-5 fade-in-up d-none">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title mb-0">Catálogo de Categorías</h2>
+        <button class="btn btn-primary custom-btn shadow-sm" onclick="abrirModalCategoria()">
+            <i class="bi bi-plus-lg me-1"></i> Nueva Categoría
+        </button>
+    </div>
+
+    <div class="glass-card p-4">
+        <div class="table-responsive">
+            <table class="table table-glass align-middle mb-0" id="tablaCategorias">
+                <thead>
+                    <tr>
+                        <th width="15%">Código</th>
+                        <th width="30%">Nombre</th>
+                        <th width="40%">Descripción</th>
+                        <th width="15%" class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="4" class="text-center text-light-50">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Categoría -->
+<div class="modal fade glass-modal" id="modalCategoria" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-secondary border-opacity-50">
+                <h5 class="modal-title fw-bold text-white" id="modalCategoriaLabel">Nueva Categoría</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="formCategoria">
+                    <input type="hidden" id="catId">
+                    <div class="mb-3">
+                        <label class="form-label text-light-50 small text-uppercase fw-bold">Nombre</label>
+                        <input type="text" class="form-control custom-input" id="catNombre" required placeholder="Ej. Novela, Ciencias">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-light-50 small text-uppercase fw-bold">Descripción</label>
+                        <textarea class="form-control custom-input" id="catDescripcion" rows="3" placeholder="Breve descripción..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-secondary border-opacity-50">
+                <button type="button" class="btn btn-outline-secondary text-white border-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary custom-btn" onclick="guardarCategoria()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECCION AUTORES -->
+<div id="seccionAutores" class="container mt-5 fade-in-up d-none">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="page-title mb-0">Catálogo de Autores</h2>
+        <button class="btn btn-primary custom-btn shadow-sm" onclick="abrirModalAutor()">
+            <i class="bi bi-plus-lg me-1"></i> Nuevo Autor
+        </button>
+    </div>
+
+    <div class="glass-card p-4">
+        <div class="table-responsive">
+            <table class="table table-glass align-middle mb-0" id="tablaAutores">
+                <thead>
+                    <tr>
+                        <th width="35%">Nombre</th>
+                        <th width="35%">Apellido</th>
+                        <th width="15%">Nacionalidad</th>
+                        <th width="15%" class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="4" class="text-center text-light-50">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Autor -->
+<div class="modal fade glass-modal" id="modalAutor" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-secondary border-opacity-50">
+                <h5 class="modal-title fw-bold text-white" id="modalAutorLabel">Nuevo Autor</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="formAutor">
+                    <input type="hidden" id="autorId">
+                    <div class="mb-3">
+                        <label class="form-label text-light-50 small text-uppercase fw-bold">Nombre</label>
+                        <input type="text" class="form-control custom-input" id="autorNombre" required placeholder="Ej. Gabriel García">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-light-50 small text-uppercase fw-bold">Apellido</label>
+                        <input type="text" class="form-control custom-input" id="autorApellido" required placeholder="Ej. Márquez">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-light-50 small text-uppercase fw-bold">Nacionalidad</label>
+                        <input type="text" class="form-control custom-input" id="autorNacionalidad" placeholder="Ej. Colombiano">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-secondary border-opacity-50">
+                <button type="button" class="btn btn-outline-secondary text-white border-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary custom-btn" onclick="guardarAutor()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../js/api.js"></script>
+<script src="categorias.js"></script>
+<script src="autores.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Inicializar perfil usuario
         const userInfoStr = localStorage.getItem('usuarioInfo');
         if (userInfoStr) {
             const userInfo = JSON.parse(userInfoStr);
@@ -140,7 +269,50 @@
                 document.getElementById('headerUserAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=17a2b8&color=fff`;
             }
         }
+
+        // Configurar navegación SPA
+        configurarNavegacion();
     });
+
+    function configurarNavegacion() {
+        const links = {
+            'linkDashboard': 'seccionDashboard',
+            'linkCategorias': 'seccionCategorias',
+            'linkAutores': 'seccionAutores'
+        };
+
+        for (const [linkId, sectionId] of Object.entries(links)) {
+            const link = document.getElementById(linkId);
+            if (link) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Actualizar UI del navbar
+                    document.querySelectorAll('.navbar-nav .nav-link').forEach(l => {
+                        l.classList.remove('active', 'fw-semibold');
+                        l.classList.add('text-light-50');
+                    });
+                    link.classList.remove('text-light-50');
+                    link.classList.add('active', 'fw-semibold');
+
+                    // Ocultar todas las secciones
+                    Object.values(links).forEach(sid => {
+                        const sec = document.getElementById(sid);
+                        if(sec) sec.classList.add('d-none');
+                    });
+
+                    // Mostrar seccion
+                    const targetSec = document.getElementById(sectionId);
+                    if (targetSec) {
+                        targetSec.classList.remove('d-none');
+                        // Disparar carga de datos si es necesario
+                        if (sectionId === 'seccionCategorias') window.cargarCategorias();
+                        if (sectionId === 'seccionAutores') window.cargarAutores();
+                    }
+                });
+            }
+        }
+    }
 
     function logout() {
         localStorage.removeItem('usuarioInfo');

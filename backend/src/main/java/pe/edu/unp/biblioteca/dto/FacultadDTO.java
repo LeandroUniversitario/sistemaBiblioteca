@@ -4,18 +4,14 @@ public class FacultadDTO {
     private Integer idFacultad;
     private String codigoFacultad;
     private String nombreFacultad;
-    private String abreviatura;
-    private String estado;
 
     public FacultadDTO() {
     }
 
-    public FacultadDTO(Integer idFacultad, String codigoFacultad, String nombreFacultad, String abreviatura, String estado) {
+    public FacultadDTO(Integer idFacultad, String codigoFacultad, String nombreFacultad) {
         this.idFacultad = idFacultad;
         this.codigoFacultad = codigoFacultad;
         this.nombreFacultad = nombreFacultad;
-        this.abreviatura = abreviatura;
-        this.estado = estado;
     }
 
     public Integer getIdFacultad() {
@@ -42,19 +38,5 @@ public class FacultadDTO {
         this.nombreFacultad = nombreFacultad;
     }
 
-    public String getAbreviatura() {
-        return abreviatura;
-    }
 
-    public void setAbreviatura(String abreviatura) {
-        this.abreviatura = abreviatura;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
 }

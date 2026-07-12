@@ -57,9 +57,7 @@ INSERT INTO estado (entidad, codigo, descripcion) VALUES
 CREATE TABLE facultad (
     id_facultad     INT AUTO_INCREMENT PRIMARY KEY,
     codigo_facultad VARCHAR(10) NULL UNIQUE,
-    nombre_facultad VARCHAR(100) NOT NULL UNIQUE,
-    abreviatura     VARCHAR(10) NULL,
-    estado          VARCHAR(20) DEFAULT 'Activo'
+    nombre_facultad VARCHAR(100) NOT NULL UNIQUE
 ) ENGINE = InnoDB;
 
 -- =========================================================
@@ -339,16 +337,6 @@ CREATE TABLE comprobante_pago_multa (
         FOREIGN KEY (id_multa) REFERENCES multa(id_multa)
 ) ENGINE = InnoDB;
 
-
--- =========================================================
--- TRIGGERS: generación automática de códigos visibles
---
--- IMPORTANTE PARA phpMyAdmin: al pegar este bloque en la
--- pestaña SQL, cambia el campo "Delimiter" (debajo del cuadro
--- de texto) a  //  ANTES de ejecutar este bloque, y vuélvelo a
--- ";" después. Esto es necesario porque el cuerpo del trigger
--- usa punto y coma internamente.
--- =========================================================
 
 
 -- =========================================================

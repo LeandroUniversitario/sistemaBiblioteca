@@ -21,6 +21,7 @@ DELIMITER $$
 --  - Duplicados de email / documento_identidad / codigo_universitario.
 --  - id_carrera inexistente (FK).
 -- =========================================================
+DROP PROCEDURE IF EXISTS sp_registrar_lector$$
 CREATE PROCEDURE sp_registrar_lector (
     IN  p_nombre               VARCHAR(100),
     IN  p_apellido             VARCHAR(100),
@@ -112,6 +113,7 @@ END$$
 -- =========================================================
 -- sp_registrar_bibliotecario
 -- =========================================================
+DROP PROCEDURE IF EXISTS sp_registrar_bibliotecario$$
 CREATE PROCEDURE sp_registrar_bibliotecario (
     IN  p_nombre              VARCHAR(100),
     IN  p_apellido            VARCHAR(100),
@@ -186,6 +188,7 @@ END$$
 -- =========================================================
 -- sp_registrar_administrador
 -- =========================================================
+DROP PROCEDURE IF EXISTS sp_registrar_administrador$$
 CREATE PROCEDURE sp_registrar_administrador (
     IN  p_nombre              VARCHAR(100),
     IN  p_apellido            VARCHAR(100),
@@ -265,6 +268,7 @@ END$$
 -- Si el correo no existe, p_id_usuario queda en NULL -- Java
 -- debe interpretar eso como "usuario no encontrado".
 -- =========================================================
+DROP PROCEDURE IF EXISTS sp_login_usuario$$
 CREATE PROCEDURE sp_login_usuario (
     IN  p_email            VARCHAR(150),
     OUT p_id_usuario       INT,
@@ -299,6 +303,7 @@ END$$
 -- No permite editar email ni documento_identidad (decisión de
 -- alcance: son datos de identidad fijados en el registro).
 -- =========================================================
+DROP PROCEDURE IF EXISTS sp_actualizar_lector$$
 CREATE PROCEDURE sp_actualizar_lector (
     IN p_id_usuario           INT,
     IN p_nombre               VARCHAR(100),
@@ -370,6 +375,7 @@ END$$
 -- (codigo_bibliotecario / codigo_administrador) es autogenerado
 -- y no editable.
 -- =========================================================
+DROP PROCEDURE IF EXISTS sp_actualizar_bibliotecario$$
 CREATE PROCEDURE sp_actualizar_bibliotecario (
     IN p_id_usuario INT,
     IN p_nombre     VARCHAR(100),
@@ -393,6 +399,7 @@ BEGIN
     WHERE id_usuario = p_id_usuario AND rol = 'bibliotecario';
 END$$
 
+DROP PROCEDURE IF EXISTS sp_actualizar_administrador$$
 CREATE PROCEDURE sp_actualizar_administrador (
     IN p_id_usuario INT,
     IN p_nombre     VARCHAR(100),
@@ -423,6 +430,7 @@ END$$
 -- DELETE físico de usuario: preserva la trazabilidad histórica
 -- con Prestamo, Comprobante_*, parametro_sistema, etc.
 -- =========================================================
+DROP PROCEDURE IF EXISTS sp_desactivar_usuario$$
 CREATE PROCEDURE sp_desactivar_usuario (
     IN p_id_usuario INT
 )
@@ -445,6 +453,7 @@ BEGIN
     END IF;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_activar_usuario$$
 CREATE PROCEDURE sp_activar_usuario (
     IN p_id_usuario INT
 )
@@ -471,6 +480,7 @@ END$$
 -- =========================================================
 -- Listados y consultas
 -- =========================================================
+DROP PROCEDURE IF EXISTS sp_listar_lectores$$
 CREATE PROCEDURE sp_listar_lectores ()
 BEGIN
     SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.documento_identidad,
@@ -485,6 +495,7 @@ BEGIN
     ORDER BY u.apellido, u.nombre;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_obtener_lector_por_id$$
 CREATE PROCEDURE sp_obtener_lector_por_id (
     IN p_id_usuario INT
 )
@@ -501,6 +512,7 @@ BEGIN
     WHERE u.id_usuario = p_id_usuario;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_listar_bibliotecarios$$
 CREATE PROCEDURE sp_listar_bibliotecarios ()
 BEGIN
     SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.documento_identidad,
@@ -511,6 +523,7 @@ BEGIN
     ORDER BY u.apellido, u.nombre;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_listar_administradores$$
 CREATE PROCEDURE sp_listar_administradores ()
 BEGIN
     SELECT u.id_usuario, u.nombre, u.apellido, u.email, u.documento_identidad,
@@ -521,6 +534,7 @@ BEGIN
     ORDER BY u.apellido, u.nombre;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_obtener_bibliotecario_por_id$$
 CREATE PROCEDURE sp_obtener_bibliotecario_por_id (
     IN p_id_usuario INT
 )
@@ -533,6 +547,7 @@ BEGIN
     WHERE u.id_usuario = p_id_usuario;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_obtener_administrador_por_id$$
 CREATE PROCEDURE sp_obtener_administrador_por_id (
     IN p_id_usuario INT
 )

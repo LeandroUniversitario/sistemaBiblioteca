@@ -55,7 +55,7 @@ Table usuario {
   apellido            varchar(100) [not null]
   email               varchar(150) [not null, unique]
   password_hash       varchar(255) [not null]
-  rol                 varchar(20)  [not null, note: "ENUM: lector | bibliotecario | administrador (discriminador)"]
+  rol                 enum('administrador', 'bibliotecario', 'lector') [not null, note: "Discriminador"]
   documento_identidad varchar(20)  [not null, unique]
   telefono            varchar(20)
   fecha_registro      datetime     [not null, default: `now()`]
@@ -68,7 +68,7 @@ Table lector {
   id_usuario           int [pk, note: "PK compartida = FK -> usuario.id_usuario (1:1 especialización)"]
   codigo_universitario varchar(20) [not null, unique]
   id_carrera           int [note: "NULL-able: docentes/personal_administrativo/externos no siempre tienen carrera"]
-  tipo_lector          varchar(20) [not null, note: "ENUM: estudiante | docente | personal_administrativo | externo"]
+  tipo_lector          enum('estudiante', 'docente', 'personal_administrativo', 'externo') [not null]
 
   Note: "Solo usuarios con rol='lector' tienen fila aquí. prestamo.id_lector referencia esta tabla, no usuario directamente."
 }

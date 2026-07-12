@@ -31,26 +31,18 @@ async function cargarFacultades() {
         const facultades = await fetchApi('/facultades');
         
         if (!facultades || facultades.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-white-50 py-3">No hay facultades registradas</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center text-white-50 py-3">No hay facultades registradas</td></tr>`;
             return;
         }
 
         tbody.innerHTML = '';
         facultades.forEach(fac => {
-            const estadoTexto = fac.estado || 'Activo';
-            const estadoBadge = estadoTexto.toLowerCase() === 'activo' 
-                ? '<span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-2 py-1">Activo</span>'
-                : '<span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50 px-2 py-1">Inactivo</span>';
-
-            const abreviatura = fac.abreviatura ? fac.abreviatura : '-';
             const codigo = fac.codigoFacultad ? fac.codigoFacultad : '#FAC-' + fac.idFacultad;
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${codigo}</td>
                 <td>${fac.nombreFacultad}</td>
-                <td>${abreviatura}</td>
-                <td>${estadoBadge}</td>
                 <td class="text-end">
                     <button class="btn btn-sm btn-outline-info border-0 hover-glow" onclick="editarFacultad(${fac.idFacultad})" title="Editar"><i class="bi bi-pencil"></i></button>
                     <button class="btn btn-sm btn-outline-danger border-0 hover-glow" onclick="eliminarFacultad(${fac.idFacultad})" title="Eliminar"><i class="bi bi-trash"></i></button>
@@ -59,7 +51,7 @@ async function cargarFacultades() {
             tbody.appendChild(tr);
         });
     } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-3">Error al cargar las facultades</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" class="text-center text-danger py-3">Error al cargar las facultades</td></tr>`;
         console.error('Error cargando facultades:', error);
     }
 }
@@ -89,8 +81,7 @@ async function editarFacultad(id) {
         const fac = await fetchApi(`/facultades/${id}`);
         document.getElementById('facultadId').value = fac.idFacultad;
         document.getElementById('facultadNombre').value = fac.nombreFacultad;
-        document.getElementById('facultadAbreviatura').value = fac.abreviatura || '';
-        document.getElementById('facultadEstado').value = fac.estado || 'Activo';
+        document.getElementById('facultadNombre').value = fac.nombreFacultad;
         
         document.getElementById('modalFacultadTitle').innerText = 'Editar Facultad';
         modalFacultadInstance.show();
@@ -102,8 +93,6 @@ async function editarFacultad(id) {
 async function guardarFacultad() {
     const id = document.getElementById('facultadId').value;
     const nombre = document.getElementById('facultadNombre').value;
-    const abreviatura = document.getElementById('facultadAbreviatura').value;
-    const estado = document.getElementById('facultadEstado').value;
 
     if (!nombre) {
         alert('El nombre es obligatorio');
@@ -111,9 +100,7 @@ async function guardarFacultad() {
     }
 
     const payload = {
-        nombreFacultad: nombre,
-        abreviatura: abreviatura,
-        estado: estado
+        nombreFacultad: nombre
     };
 
     try {
