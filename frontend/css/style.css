@@ -306,3 +306,15 @@ body {
 .tab-transition {
     animation: smoothFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
+
+/* ==========================================================================
+   Modales Glassmorphism
+   ========================================================================== */
+.glass-modal .modal-content {
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    color: #f8fafc;
+}

@@ -3,6 +3,7 @@ package pe.edu.unp.biblioteca.dto;
 public class GenericResponseDTO {
     private boolean success;
     private String message;
+    private Object data;
 
     public GenericResponseDTO() {
     }
@@ -10,6 +11,12 @@ public class GenericResponseDTO {
     public GenericResponseDTO(boolean success, String message) {
         this.success = success;
         this.message = message;
+    }
+
+    public GenericResponseDTO(boolean success, String message, Object data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
     }
 
     public boolean isSuccess() {
@@ -26,5 +33,13 @@ public class GenericResponseDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }
