@@ -43,10 +43,17 @@ window.cargarLibros = async function() {
                         ${libro.ejemplaresDisponibles} / ${libro.totalEjemplares}
                     </span>
                 </td>
+                <td>
+                    <span class="badge ${(libro.estado || 'ACTIVO').toUpperCase() === 'ACTIVO' ? 'bg-success' : 'bg-danger'} rounded-pill">${(libro.estado || 'ACTIVO').toUpperCase()}</span>
+                </td>
                 <td class="text-end">
                     <button class="btn btn-sm btn-outline-info me-1" title="Ver/Gestionar Ejemplares" onclick="verEjemplares(${libro.idLibro})"><i class="bi bi-collection"></i></button>
-                    <button class="btn btn-sm btn-outline-warning me-1" title="Editar Libro" onclick='editarLibro(${JSON.stringify(libro).replace(/'/g, "&#39;")})'><i class="bi bi-pencil"></i></button>
-                    <button class="btn btn-sm btn-outline-danger" title="Dar de baja" onclick="eliminarLibro(${libro.idLibro})"><i class="bi bi-trash"></i></button>
+                    ${(libro.estado || 'ACTIVO').toUpperCase() !== 'BAJA' ? `
+                        <button class="btn btn-sm btn-outline-warning me-1" title="Editar Libro" onclick='editarLibro(${JSON.stringify(libro).replace(/'/g, "&#39;")})'><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" title="Dar de baja" onclick="eliminarLibro(${libro.idLibro})"><i class="bi bi-trash"></i></button>
+                    ` : `
+                        <button class="btn btn-sm btn-outline-success" title="Reactivar" onclick="reactivarLibro(${libro.idLibro})"><i class="bi bi-arrow-counterclockwise"></i></button>
+                    `}
                 </td>
             `;
             tbody.appendChild(tr);
@@ -175,6 +182,7 @@ window.guardarLibro = async function() {
     }
 
     const payload = {
+        idLibro: id ? parseInt(id) : null,
         titulo: titulo,
         isbn: isbn,
         idCategoria: parseInt(idCategoria),
@@ -220,14 +228,33 @@ window.guardarLibro = async function() {
 window.eliminarLibro = async function(id) {
     if (confirm("¿Estás seguro de dar de baja este libro? Los ejemplares podrían verse afectados.")) {
         try {
-            const response = await fetch(`http://localhost:8080/api/libros/${id}`, {
-                method: 'DELETE'
+            const response = await fetch(`http://localhost:8080/api/libros/${id}/baja`, {
+                method: 'PUT'
             });
             const result = await response.json();
             if (response.ok && result.success) {
                 cargarLibros();
             } else {
                 alert(result.message || "Error al eliminar");
+            }
+        } catch(e) {
+            console.error(e);
+            alert("Error de red");
+        }
+    }
+}
+
+window.reactivarLibro = async function(id) {
+    if (confirm("¿Estás seguro de reactivar este libro?")) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/libros/${id}/reactivar`, {
+                method: 'PUT'
+            });
+            const result = await response.json();
+            if (response.ok && result.success) {
+                cargarLibros();
+            } else {
+                alert(result.message || "Error al reactivar");
             }
         } catch(e) {
             console.error(e);
