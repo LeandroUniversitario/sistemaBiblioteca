@@ -20,32 +20,8 @@ public class UsuarioDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Map<String, Object> registrarAdministrador(RegistroUsuarioDTO dto, String hashedPassword) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("sp_registrar_administrador");
-        MapSqlParameterSource in = new MapSqlParameterSource()
-                .addValue("p_nombre", dto.getNombre())
-                .addValue("p_apellido", dto.getApellido())
-                .addValue("p_email", dto.getEmail())
-                .addValue("p_password_hash", hashedPassword)
-                .addValue("p_documento_identidad", dto.getDocumentoIdentidad())
-                .addValue("p_telefono", dto.getTelefono());
-        return jdbcCall.execute(in);
-    }
-
-    public Map<String, Object> registrarBibliotecario(RegistroUsuarioDTO dto, String hashedPassword) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("sp_registrar_bibliotecario");
-        MapSqlParameterSource in = new MapSqlParameterSource()
-                .addValue("p_nombre", dto.getNombre())
-                .addValue("p_apellido", dto.getApellido())
-                .addValue("p_email", dto.getEmail())
-                .addValue("p_password_hash", hashedPassword)
-                .addValue("p_documento_identidad", dto.getDocumentoIdentidad())
-                .addValue("p_telefono", dto.getTelefono());
-        return jdbcCall.execute(in);
-    }
-
-    public Map<String, Object> registrarLector(RegistroUsuarioDTO dto, String hashedPassword) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("sp_registrar_lector");
+    public Map<String, Object> registrarUsuario(RegistroUsuarioDTO dto, String hashedPassword) {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate).withProcedureName("sp_registrar_usuario");
         MapSqlParameterSource in = new MapSqlParameterSource()
                 .addValue("p_nombre", dto.getNombre())
                 .addValue("p_apellido", dto.getApellido())
@@ -53,6 +29,7 @@ public class UsuarioDao {
                 .addValue("p_password_hash", hashedPassword)
                 .addValue("p_documento_identidad", dto.getDocumentoIdentidad())
                 .addValue("p_telefono", dto.getTelefono())
+                .addValue("p_rol", dto.getRol())
                 .addValue("p_codigo_universitario", dto.getCodigoUniversitario())
                 .addValue("p_id_carrera", dto.getIdCarrera())
                 .addValue("p_tipo_lector", dto.getTipoLector());

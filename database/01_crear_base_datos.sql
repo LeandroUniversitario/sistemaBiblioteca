@@ -147,6 +147,24 @@ CREATE TABLE administrador (
 ) ENGINE = InnoDB;
 
 -- =========================================================
+-- Tabla: empresa (Configuración del cliente / dueño del sistema)
+-- Solo debería tener 1 fila (id_empresa = 1) para parametrización.
+-- =========================================================
+CREATE TABLE empresa (
+    id_empresa        INT AUTO_INCREMENT PRIMARY KEY,
+    razon_social      VARCHAR(150) NOT NULL,
+    ruc               VARCHAR(20)  NOT NULL UNIQUE,
+    direccion         VARCHAR(200) NULL,
+    telefono_contacto VARCHAR(20)  NULL,
+    logo_url          VARCHAR(255) NULL
+) ENGINE = InnoDB;
+
+-- Semilla obligatoria para la empresa
+INSERT INTO empresa (id_empresa, razon_social, ruc, direccion, telefono_contacto)
+VALUES (1, 'Universidad Nacional de Piura', '20100000000', 'Campus Universitario, Piura', '073-000000');
+
+
+-- =========================================================
 -- Tabla: parametro_sistema
 -- Configuración de negocio editable sin tocar código, con
 -- trazabilidad de auditoría hacia el administrador que hizo el

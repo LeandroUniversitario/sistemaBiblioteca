@@ -437,5 +437,45 @@ BEGIN
     WHERE id_autor = p_id_autor;
 END$$
 
-DELIMITER ;
+-- =========================================================
+-- EMPRESA (Configuración Institucional)
+-- =========================================================
 
+DROP PROCEDURE IF EXISTS sp_obtener_empresa$$
+CREATE PROCEDURE sp_obtener_empresa ()
+BEGIN
+    SELECT id_empresa, razon_social, ruc, direccion, telefono_contacto, logo_url
+    FROM empresa
+    LIMIT 1;
+END$$
+
+DROP PROCEDURE IF EXISTS sp_actualizar_empresa$$
+CREATE PROCEDURE sp_actualizar_empresa (
+    IN p_id_empresa        INT,
+    IN p_razon_social      VARCHAR(150),
+    IN p_ruc               VARCHAR(20),
+    IN p_direccion         VARCHAR(200),
+    IN p_telefono_contacto VARCHAR(20),
+    IN p_logo_url          VARCHAR(255)
+)
+BEGIN
+    IF TRIM(p_razon_social) = '' OR p_razon_social IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Debe ingresar la razón social de la empresa/institución.';
+    END IF;
+
+    IF TRIM(p_ruc) = '' OR p_ruc IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Debe ingresar el RUC de la empresa/institución.';
+    END IF;
+
+    UPDATE empresa
+    SET razon_social      = p_razon_social,
+        ruc               = p_ruc,
+        direccion         = p_direccion,
+        telefono_contacto = p_telefono_contacto,
+        logo_url          = p_logo_url
+    WHERE id_empresa = p_id_empresa;
+END$$
+
+DELIMITER ;

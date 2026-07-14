@@ -30,19 +30,14 @@ public class UsuarioService {
             // Hashear contraseña
             String hashedPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt(12));
 
-            // Llamar al SP correspondiente según el rol
+            // Llamar al SP general de registro
             String rol = dto.getRol().toLowerCase();
-            if (rol.equals("administrador")) {
-                usuarioDao.registrarAdministrador(dto, hashedPassword);
-            } else if (rol.equals("bibliotecario")) {
-                usuarioDao.registrarBibliotecario(dto, hashedPassword);
-            } else if (rol.equals("lector")) {
-                usuarioDao.registrarLector(dto, hashedPassword);
-            } else {
+            if (!rol.equals("administrador") && !rol.equals("bibliotecario") && !rol.equals("lector")) {
                 response.setSuccess(false);
                 response.setMessage("Rol no válido.");
                 return response;
             }
+            usuarioDao.registrarUsuario(dto, hashedPassword);
 
             response.setSuccess(true);
             response.setMessage("Usuario registrado correctamente.");
