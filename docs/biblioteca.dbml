@@ -29,6 +29,16 @@ Table estado {
 
   Note: "Catálogo único para todos los estados del sistema. 'entidad' acota qué códigos son válidos para cada tabla (validado en el Stored Procedure correspondiente, no a nivel de FK)."
 }
+Table empresa {
+  id_empresa int [pk, increment]
+  razon_social varchar(150) [not null]
+  ruc varchar(20) [unique, not null]
+  direccion varchar(200)
+  telefono_contacto varchar(20)
+  logo_url varchar(255)
+  
+  Note: 'Configuración de la institución dueña del sistema'
+}
 
 Table facultad {
   id_facultad     int [pk, increment]

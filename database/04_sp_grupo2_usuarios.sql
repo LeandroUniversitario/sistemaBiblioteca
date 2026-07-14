@@ -144,23 +144,25 @@ CREATE PROCEDURE sp_login_usuario (
     OUT p_estado_codigo    VARCHAR(30)
 )
 BEGIN
+    DECLARE v_existe INT DEFAULT 0;
+
     SET p_id_usuario      = NULL;
     SET p_password_hash   = NULL;
     SET p_rol             = NULL;
     SET p_nombre_completo = NULL;
     SET p_estado_codigo   = NULL;
 
-    SELECT u.id_usuario, u.password_hash, u.rol,
-           CONCAT(u.nombre, ' ', u.apellido), e.codigo
-    INTO p_id_usuario, p_password_hash, p_rol, p_nombre_completo, p_estado_codigo
-    FROM usuario u
-    INNER JOIN estado e ON e.id_estado = u.id_estado
-    WHERE u.email = p_email
-    LIMIT 1;
+    SELECT COUNT(*) INTO v_existe FROM usuario WHERE email = p_email;
 
-    -- Nota: si no hay coincidencia, todas las variables OUT quedan
-    -- en NULL de forma silenciosa (comportamiento estándar de
-    -- SELECT...INTO sin filas). Java debe verificar p_id_usuario IS NULL.
+    IF v_existe > 0 THEN
+        SELECT u.id_usuario, u.password_hash, u.rol,
+               CONCAT(u.nombre, ' ', u.apellido), e.codigo
+        INTO p_id_usuario, p_password_hash, p_rol, p_nombre_completo, p_estado_codigo
+        FROM usuario u
+        INNER JOIN estado e ON e.id_estado = u.id_estado
+        WHERE u.email = p_email
+        LIMIT 1;
+    END IF;
 END$$
 
 

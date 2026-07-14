@@ -1,25 +1,55 @@
-/* Estilos globales y Tipografía moderna */
+/* ==========================================================================
+   Sistema de Biblioteca Universitaria – Hoja de Estilos Principal
+   ==========================================================================
+   Paleta de colores:
+     - Primario:   #2563eb  (azul vibrante)
+     - Acento:     #059669  (verde esmeralda)
+     - Texto:      #1e293b  (slate oscuro)
+     - Subtexto:   #64748b  (slate medio)
+     - Fondo:      #f1f5f9  (gris azulado claro)
+     - Tarjetas:   #ffffff
+   ========================================================================== */
+
+/* ---------- Variables Globales ---------- */
 :root {
-    --primary-color: #4361ee;
-    --primary-hover: #3a0ca3;
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --accent-color: #059669;
+    --accent-hover: #047857;
+    --text-dark: #1e293b;
+    --text-medium: #475569;
+    --text-muted: #64748b;
+    --bg-body: #f1f5f9;
+    --bg-card: #ffffff;
+    --border-subtle: #e2e8f0;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.09);
+    --radius-md: 14px;
+    --radius-lg: 18px;
+
+    /* Login glassmorphism (untouched) */
     --glass-bg: rgba(255, 255, 255, 0.1);
     --glass-border: rgba(255, 255, 255, 0.2);
 }
 
+/* ---------- Base ---------- */
 body {
     font-family: 'Outfit', sans-serif;
-    background-color: #f8f9fa;
+    background-color: var(--bg-body);
     margin: 0;
+    color: var(--text-dark);
 }
 
-/* Background image para el Login */
+/* ==========================================================================
+   LOGIN  (no se toca, se mantiene hermoso)
+   ========================================================================== */
 .login-bg {
     background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('../img/bg.png') no-repeat center center/cover;
     position: relative;
     overflow: hidden;
 }
 
-/* Efecto Glassmorphism avanzado */
 .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(15px);
@@ -34,7 +64,6 @@ body {
     animation: fadeUpIn 0.8s ease-out forwards;
 }
 
-/* Inputs personalizados transparentes */
 .custom-input .form-control {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -46,7 +75,7 @@ body {
 .custom-input .form-control:focus {
     background: rgba(255, 255, 255, 0.1);
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
     color: #fff;
 }
 
@@ -54,132 +83,148 @@ body {
     color: rgba(255, 255, 255, 0.7);
 }
 
-/* Botones Premium */
+/* ---------- Botones Premium ---------- */
 .custom-btn {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     border: none;
     border-radius: 12px;
     padding: 12px 20px;
+    color: #fff;
+    font-weight: 600;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .custom-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(67, 97, 238, 0.4);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+    color: #fff;
 }
 
 .custom-btn:active {
     transform: translateY(0);
 }
 
-/* Textos */
-.text-light-50 {
+/* Login-specific text helpers (only used inside .login-bg) */
+.login-bg .text-light-50 {
     color: rgba(255, 255, 255, 0.6);
 }
 
-.hover-glow:hover {
+.login-bg .hover-glow:hover {
     color: #fff !important;
-    text-shadow: 0 0 8px rgba(255,255,255,0.5);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
     transition: all 0.3s;
 }
 
-/* Animaciones */
-@keyframes fadeUpIn {
-    0% {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Base fallback for custom helper classes */
+.text-light-50 {
+    color: var(--text-muted);
 }
 
-/* Dashboard & Glass UI Additions */
+.hover-glow:hover {
+    color: var(--primary-color) !important;
+    transition: all 0.3s;
+}
+
+/* ==========================================================================
+   ANIMACIONES
+   ========================================================================== */
+@keyframes fadeUpIn {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes smoothFadeIn {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+    animation: fadeUpIn 0.6s ease-out forwards;
+}
+
+.tab-transition {
+    animation: smoothFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ==========================================================================
+   DASHBOARD – Tema Claro Bibliotecario
+   Se aplica a Admin, Bibliotecario y Lector (body.dashboard-bg)
+   ========================================================================== */
 .dashboard-bg {
-    background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(30, 41, 59, 0.85)), url('../img/bg.png') no-repeat center center/cover;
+    background: var(--bg-body);
     background-attachment: fixed;
-    color: #f8fafc;
+    color: var(--text-dark);
     min-height: 100vh;
 }
 
+/* ---------- Navbar ---------- */
 .glass-navbar {
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background: var(--bg-card) !important;
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: none;
+}
+
+.glass-navbar .navbar-brand {
+    color: var(--primary-color) !important;
+    font-weight: 700;
+    font-size: 1.15rem;
+}
+
+.glass-navbar .navbar-brand i {
+    color: var(--primary-color) !important;
+    -webkit-text-fill-color: var(--primary-color) !important;
 }
 
 .glass-navbar .nav-link {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-muted) !important;
+    font-weight: 500;
     transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 6px 12px !important;
 }
 
-.glass-navbar .nav-link:hover, .glass-navbar .nav-link.active {
-    color: #fff;
+.glass-navbar .nav-link:hover,
+.glass-navbar .nav-link.active {
+    color: var(--primary-color) !important;
+    background: rgba(37, 99, 235, 0.06);
+    transform: translateY(-1px);
 }
 
+/* Toggler para responsive */
+.dashboard-bg .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23475569' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* ---------- Tarjetas Stat ---------- */
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .glass-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
 }
 
 .stat-card-icon {
     font-size: 2.5rem;
-    background: -webkit-linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     margin-bottom: 15px;
     display: inline-block;
+    /* Cada icono hereda su color de la clase text-* de Bootstrap */
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
 }
 
-.table-glass {
-    --bs-table-bg: transparent;
-    --bs-table-color: #f8fafc;
-    color: #f8fafc;
-    background: transparent;
-    margin-bottom: 0;
-}
-
-.table-glass th {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    padding-bottom: 15px;
-}
-
-.table-glass td {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    color: #f8fafc;
-    padding: 15px 10px;
-}
-
-.table-glass tbody tr {
-    transition: background-color 0.2s ease;
-}
-
-.table-glass tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
+/* ---------- Títulos de Página ---------- */
 .page-title {
     font-weight: 700;
     margin-bottom: 1.5rem;
+    color: var(--text-dark);
     position: relative;
     display: inline-block;
 }
@@ -195,40 +240,79 @@ body {
     border-radius: 2px;
 }
 
+/* ---------- Tablas ---------- */
+.table-glass {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-dark);
+    color: var(--text-dark);
+    background: transparent;
+    margin-bottom: 0;
+}
+
+.table-glass th {
+    border-bottom: 2px solid var(--border-subtle);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    padding-bottom: 12px;
+}
+
+.table-glass td {
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-dark);
+    padding: 14px 10px;
+    vertical-align: middle;
+}
+
+.table-glass tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table-glass tbody tr:hover {
+    background: rgba(37, 99, 235, 0.03);
+}
+
+/* ---------- Botón Outline adaptado ---------- */
 .custom-btn-outline {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    background: transparent;
+    font-weight: 500;
     transition: all 0.3s ease;
 }
 
 .custom-btn-outline:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.4);
-    color: #fff;
-}
-
-.fade-in-up {
-    animation: fadeUpIn 0.6s ease-out forwards;
-}
-
-/* Custom Search Input */
-.custom-search-input:focus {
-    background: transparent !important;
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
     color: #fff !important;
-    box-shadow: none !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ---------- Search Input ---------- */
+.custom-search-input {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-dark) !important;
+}
+
+.custom-search-input:focus {
+    background: #fff !important;
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.12) !important;
+    border-color: var(--primary-color) !important;
 }
 
 .custom-search-input::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: #94a3b8;
 }
 
+/* Hero search card (Lector) */
 .hero-search-card {
-    background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(67, 97, 238, 0.02) 100%);
-    border: 1px solid rgba(67, 97, 238, 0.2);
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%) !important;
+    border: 1px solid var(--border-subtle) !important;
 }
 
+/* ---------- Book Cards (Lector) ---------- */
 .book-card .book-cover-placeholder {
     transition: transform 0.5s ease;
 }
@@ -238,83 +322,318 @@ body {
 }
 
 /* ==========================================================================
-   Estilos personalizados para Choices.js (Glassmorphism)
+   SOBRESCRITURA MASIVA: clases oscuras de Bootstrap dentro del dashboard
+   ========================================================================== */
+
+/* --- Textos --- */
+.dashboard-bg .text-white {
+    color: var(--text-dark) !important;
+}
+
+.dashboard-bg .text-white-50 {
+    color: var(--text-muted) !important;
+}
+
+.dashboard-bg .text-light-50 {
+    color: var(--text-muted) !important;
+}
+
+/* --- Bordes --- */
+.dashboard-bg .border-light-subtle {
+    border-color: var(--border-subtle) !important;
+}
+
+.dashboard-bg .border-secondary {
+    border-color: var(--border-subtle) !important;
+}
+
+.dashboard-bg .border-opacity-50 {
+    --bs-border-opacity: 1 !important;
+}
+
+/* --- Backgrounds --- */
+.dashboard-bg .bg-transparent {
+    background-color: transparent !important;
+}
+
+/* --- Botones "outline-light" dentro del dashboard --- */
+.dashboard-bg .btn-outline-light {
+    color: var(--text-muted) !important;
+    border-color: var(--border-subtle) !important;
+    background: transparent !important;
+}
+
+.dashboard-bg .btn-outline-light:hover {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    background: rgba(37, 99, 235, 0.06) !important;
+}
+
+/* --- Botón "close" en modales --- */
+.dashboard-bg .btn-close-white {
+    filter: none !important;
+}
+
+/* --- Input group text (ícono de búsqueda) --- */
+.dashboard-bg .input-group-text {
+    background: var(--bg-card) !important;
+    border-color: var(--border-subtle) !important;
+    color: var(--text-muted) !important;
+}
+
+/* ==========================================================================
+   MODALES – Tema Claro
+   ========================================================================== */
+.dashboard-bg .modal-content,
+.dashboard-bg .modal-content.text-white {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    box-shadow: var(--shadow-lg);
+    color: var(--text-dark) !important;
+    border-radius: var(--radius-lg);
+}
+
+.dashboard-bg .modal-header {
+    border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.dashboard-bg .modal-footer {
+    border-top: 1px solid var(--border-subtle) !important;
+}
+
+.dashboard-bg .modal-content .btn-outline-secondary {
+    color: var(--text-muted) !important;
+    border-color: var(--border-subtle) !important;
+}
+
+.dashboard-bg .modal-content .btn-outline-secondary:hover {
+    background-color: #f8fafc !important;
+    color: var(--text-dark) !important;
+}
+
+/* Inputs y selects dentro de modales */
+.dashboard-bg .modal-content input,
+.dashboard-bg .modal-content select,
+.dashboard-bg .modal-content textarea {
+    color: var(--text-dark) !important;
+    border: 1px solid var(--border-subtle) !important;
+    background-color: var(--bg-card) !important;
+    border-radius: 10px;
+}
+
+.dashboard-bg .modal-content input:focus,
+.dashboard-bg .modal-content select:focus,
+.dashboard-bg .modal-content textarea:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15) !important;
+}
+
+/* Labels dentro de modales */
+.dashboard-bg .modal-content .form-label,
+.dashboard-bg .modal-content label {
+    color: var(--text-medium) !important;
+}
+
+/* ==========================================================================
+   CHOICES.JS – Tema Claro Premium
    ========================================================================== */
 .choices {
     margin-bottom: 0;
 }
+
+/* --- Contenedor principal --- */
 .choices__inner {
-    background-color: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background-color: var(--bg-card) !important;
+    border: 1.5px solid var(--border-subtle) !important;
     border-radius: 12px !important;
-    color: #fff !important;
+    color: var(--text-dark) !important;
     min-height: 48px;
-    padding-top: 5px !important;
+    padding: 6px 8px !important;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
+
+.choices.is-focused .choices__inner {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+}
+
 .choices[data-type*="select-one"] .choices__inner {
     padding-bottom: 5px !important;
 }
-.choices__list--dropdown {
-    background: rgba(30, 41, 59, 0.95) !important; /* Fondo oscuro glass */
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+/* --- Tags / Pills (autores seleccionados) --- */
+.choices__list--multiple .choices__item {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe) !important;
+    border: 1px solid #93c5fd !important;
+    border-radius: 20px !important;
+    color: #1e40af !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    padding: 5px 12px !important;
+    margin: 3px 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    transition: all 0.2s ease !important;
+    line-height: 1.4 !important;
+}
+
+.choices__list--multiple .choices__item.is-highlighted {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe) !important;
+    border-color: #60a5fa !important;
+}
+
+/* --- Botón eliminar del tag (la "X") --- */
+.choices__list--multiple .choices__button {
+    border: none !important;
+    background: none !important;
+    color: #3b82f6 !important;
+    opacity: 0.6;
+    margin: 0 !important;
+    padding: 0 0 0 4px !important;
+    font-size: 1rem !important;
+    line-height: 1 !important;
+    cursor: pointer;
+    border-left: 1px solid #93c5fd !important;
+    padding-left: 8px !important;
+    transition: opacity 0.2s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 10px !important;
+    width: 18px !important;
+    height: 18px !important;
+    text-indent: -9999px !important;
+}
+
+.choices__list--multiple .choices__button:hover {
+    opacity: 1;
+}
+
+/* --- Dropdown (lista desplegable) --- */
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+    background: #fff !important;
+    border: 1.5px solid var(--border-subtle) !important;
     border-radius: 12px !important;
-    color: #fff !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-    margin-top: 5px;
-    z-index: 1050; /* Por encima de otros elementos */
+    color: var(--text-dark) !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    margin-top: 6px;
+    z-index: 1050;
+    overflow: hidden;
+    padding: 4px !important;
 }
-.choices__list--dropdown .choices__item--selectable {
-    padding-right: 10px !important;
+
+/* Cada ítem del dropdown */
+.choices__list--dropdown .choices__item {
+    padding: 10px 14px !important;
+    border-radius: 8px !important;
+    margin: 2px 0 !important;
+    font-size: 0.9rem !important;
+    color: var(--text-dark) !important;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
+
 .choices__list--dropdown .choices__item--selectable.is-highlighted {
-    background-color: rgba(255, 255, 255, 0.1) !important; /* Hover effect */
-    color: #fff !important;
+    background-color: #eff6ff !important;
+    color: var(--primary-color) !important;
 }
+
+.choices__list--dropdown .choices__item--selectable:active {
+    background-color: #dbeafe !important;
+}
+
+/* Items ya seleccionados en el dropdown (deshabilitados) */
+.choices__list--dropdown .choices__item--disabled {
+    color: #cbd5e1 !important;
+    background: transparent !important;
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+/* --- Input de búsqueda dentro del multi-select --- */
 .choices__input {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-    color: #fff !important;
+    background-color: transparent !important;
+    color: var(--text-dark) !important;
+    border: none !important;
     border-radius: 6px !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 0 !important;
+    padding: 4px 2px !important;
+    font-size: 0.9rem !important;
 }
+
 .choices__input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: #94a3b8;
+    font-style: italic;
 }
+
+/* --- Flechita del select-one --- */
 .choices[data-type*="select-one"]::after {
-    border-color: #fff transparent transparent transparent !important;
+    border-color: var(--text-muted) transparent transparent transparent !important;
 }
+
 .choices[data-type*="select-one"].is-open::after {
-    border-color: transparent transparent #fff transparent !important;
+    border-color: transparent transparent var(--text-muted) transparent !important;
 }
+
+/* --- General items & placeholder --- */
 .choices__item {
-    color: #fff !important;
+    color: var(--text-dark) !important;
 }
+
 .choices__placeholder {
-    color: rgba(255, 255, 255, 0.6) !important;
+    color: var(--text-muted) !important;
     opacity: 1 !important;
+    font-style: italic;
+}
+
+/* --- Borde de búsqueda dentro del dropdown --- */
+.choices__list--dropdown .choices__input {
+    border-bottom: 1px solid var(--border-subtle) !important;
+    border-radius: 0 !important;
+    padding: 10px 14px !important;
+    margin-bottom: 4px !important;
 }
 
 /* ==========================================================================
-   Animaciones para cambio de pestañas (Tabs)
+   STAT CARDS – Colores de acento con gradientes suaves de fondo
    ========================================================================== */
-@keyframes smoothFadeIn {
-    0% { opacity: 0; transform: translateY(15px); }
-    100% { opacity: 1; transform: translateY(0); }
+.dashboard-bg .glass-card.p-4.text-center {
+    position: relative;
+    overflow: hidden;
 }
 
-.tab-transition {
-    animation: smoothFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+/* Sutil línea superior de color en las stat cards */
+.dashboard-bg .row.g-4 > .col-md-4:nth-child(1) .glass-card.p-4.text-center {
+    border-top: 3px solid var(--primary-color);
+}
+
+.dashboard-bg .row.g-4 > .col-md-4:nth-child(2) .glass-card.p-4.text-center {
+    border-top: 3px solid var(--accent-color);
+}
+
+.dashboard-bg .row.g-4 > .col-md-4:nth-child(3) .glass-card.p-4.text-center {
+    border-top: 3px solid #f59e0b;
 }
 
 /* ==========================================================================
-   Modales Glassmorphism
+   ACCIÓN RÁPIDA BUTTONS (Bibliotecario)
    ========================================================================== */
-.glass-modal .modal-content {
-    background: rgba(30, 41, 59, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    color: #f8fafc;
+.dashboard-bg .btn-outline-light.text-start {
+    color: var(--text-dark) !important;
+    border: 1.5px solid var(--border-subtle) !important;
+    background: var(--bg-card) !important;
+}
+
+.dashboard-bg .btn-outline-light.text-start:hover {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    background: rgba(37, 99, 235, 0.04) !important;
+}
+
+/* ==========================================================================
+   BADGES (mejora de contraste)
+   ========================================================================== */
+.dashboard-bg .badge {
+    font-weight: 500;
 }
