@@ -136,6 +136,33 @@ public class PrestamoDao {
     }
 
     /**
+     * Llama a sp_listar_prestamos_por_lector.
+     * Retorna el historial completo de préstamos de un lector.
+     */
+    public List<PrestamoDTO> listarPrestamosPorLector(Integer idLector) {
+        String sql = "CALL sp_listar_prestamos_por_lector(?)";
+        return jdbcTemplate.query(sql, new RowMapper<PrestamoDTO>() {
+            @Override
+            public PrestamoDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                PrestamoDTO dto = new PrestamoDTO();
+                dto.setIdPrestamo(rs.getInt("id_prestamo"));
+                dto.setTitulo(rs.getString("titulo"));
+                dto.setCodigoEjemplar(rs.getString("codigo_ejemplar"));
+                dto.setEstado(rs.getString("estado"));
+
+                Timestamp fp = rs.getTimestamp("fecha_prestamo");
+                dto.setFechaPrestamo(fp != null ? SDF.format(fp) : null);
+                Timestamp fl = rs.getTimestamp("fecha_limite");
+                dto.setFechaLimite(fl != null ? SDF.format(fl) : null);
+                Timestamp fd = rs.getTimestamp("fecha_devolucion");
+                dto.setFechaDevolucion(fd != null ? SDF.format(fd) : null);
+
+                return dto;
+            }
+        }, idLector);
+    }
+
+    /**
      * RowMapper reutilizable para sp_listar_prestamos_activos
      */
     private class PrestamoRowMapper implements RowMapper<PrestamoDTO> {

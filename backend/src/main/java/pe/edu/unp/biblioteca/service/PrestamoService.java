@@ -29,6 +29,13 @@ public class PrestamoService {
     }
 
     /**
+     * Lista préstamos por lector
+     */
+    public List<PrestamoDTO> listarPrestamosPorLector(Integer idLector) {
+        return prestamoDao.listarPrestamosPorLector(idLector);
+    }
+
+    /**
      * Registra un nuevo préstamo.
      */
     public GenericResponseDTO registrarPrestamo(RegistroPrestamoDTO dto) {

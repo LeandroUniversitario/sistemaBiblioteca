@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/facultades")
-@CrossOrigin(origins = "*") // Permitir peticiones desde el frontend
 public class FacultadController {
 
     private final FacultadService facultadService;

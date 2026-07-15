@@ -97,6 +97,23 @@ public class CarreraDao {
         jdbcCall.execute(in);
     }
 
+    public List<CarreraDTO> listarCarrerasPorFacultad(Integer idFacultad) {
+        return jdbcTemplate.query(
+                "CALL sp_listar_carreras_por_facultad(?)",
+                new RowMapper<CarreraDTO>() {
+                    @Override
+                    public CarreraDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        CarreraDTO dto = new CarreraDTO();
+                        dto.setIdCarrera(rs.getInt("id_carrera"));
+                        dto.setCodigoCarrera(rs.getString("codigo_carrera"));
+                        dto.setNombreCarrera(rs.getString("nombre_carrera"));
+                        return dto;
+                    }
+                },
+                idFacultad
+        );
+    }
+
     public void eliminar(Integer id) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName("sp_eliminar_carrera")

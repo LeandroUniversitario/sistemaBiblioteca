@@ -18,6 +18,10 @@ public class AutorService {
         return autorDao.listarAutores();
     }
 
+    public List<AutorDTO> buscarPorApellido(String apellido) {
+        return autorDao.buscarPorApellido(apellido);
+    }
+
     public AutorDTO obtenerPorId(Integer id) {
         return autorDao.obtenerPorId(id);
     }

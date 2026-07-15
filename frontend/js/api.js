@@ -29,12 +29,13 @@ async function fetchApi(endpoint, method = 'GET', body = null) {
             throw new Error(errorData.error || `Error HTTP: ${response.status}`);
         }
 
-        // Si es 204 No Content, no intentamos parsear JSON
+        // Si es 204 No Content u otro código 200 sin cuerpo, no fallamos
         if (response.status === 204) {
             return null;
         }
 
-        return await response.json();
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
     } catch (error) {
         console.error(`Error en API ${endpoint}:`, error);
         throw error;

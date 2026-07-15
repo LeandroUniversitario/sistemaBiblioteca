@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/libros")
-@CrossOrigin(origins = "*")
 public class LibroController {
 
     @Autowired
@@ -94,5 +93,10 @@ public class LibroController {
     @GetMapping("/{id}/autores")
     public ResponseEntity<List<AutorDTO>> listarAutoresPorLibro(@PathVariable Integer id) {
         return ResponseEntity.ok(libroService.listarAutoresPorLibro(id));
+    }
+
+    @GetMapping("/autor/{id}")
+    public ResponseEntity<List<LibroDTO>> listarLibrosPorAutor(@PathVariable Integer id) {
+        return ResponseEntity.ok(libroService.listarLibrosPorAutor(id));
     }
 }

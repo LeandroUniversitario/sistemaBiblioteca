@@ -8,7 +8,7 @@
 -- de texto) a  $$  y vuélvelo a  ;  al terminar.
 -- =========================================================
 
-USE biblioteca_db;
+USE sistemabiblioteca;
 
 DELIMITER $$
 

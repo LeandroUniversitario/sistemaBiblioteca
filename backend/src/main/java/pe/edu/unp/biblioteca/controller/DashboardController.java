@@ -5,10 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/dashboard")
-@CrossOrigin(origins = "*")
 public class DashboardController {
 
     @Autowired
@@ -37,5 +37,46 @@ public class DashboardController {
         }
         
         return stats;
+    }
+
+    @GetMapping("/stats-bibliotecario")
+    public Map<String, Integer> getStatsBibliotecario() {
+        Map<String, Integer> stats = new HashMap<>();
+        
+        try {
+            Map<String, Object> result = jdbcTemplate.queryForMap("CALL sp_dashboard_bibliotecario_stats()");
+            
+            Number librosDisponibles = (Number) result.get("librosDisponibles");
+            Number prestamosActivos = (Number) result.get("prestamosActivos");
+            Number devolucionesAtrasadas = (Number) result.get("devolucionesAtrasadas");
+
+            stats.put("librosDisponibles", librosDisponibles != null ? librosDisponibles.intValue() : 0);
+            stats.put("prestamosActivos", prestamosActivos != null ? prestamosActivos.intValue() : 0);
+            stats.put("devolucionesAtrasadas", devolucionesAtrasadas != null ? devolucionesAtrasadas.intValue() : 0);
+        } catch (Exception e) {
+            stats.put("librosDisponibles", 0);
+            stats.put("prestamosActivos", 0);
+            stats.put("devolucionesAtrasadas", 0);
+        }
+        
+        return stats;
+    }
+
+    @GetMapping("/prestamos-recientes")
+    public List<Map<String, Object>> getPrestamosRecientes() {
+        try {
+            return jdbcTemplate.queryForList("CALL sp_dashboard_prestamos_recientes()");
+        } catch (Exception e) {
+            return java.util.Collections.emptyList();
+        }
+    }
+
+    @GetMapping("/alertas-vencimiento")
+    public List<Map<String, Object>> getAlertasVencimiento() {
+        try {
+            return jdbcTemplate.queryForList("CALL sp_dashboard_alertas_vencimiento()");
+        } catch (Exception e) {
+            return java.util.Collections.emptyList();
+        }
     }
 }

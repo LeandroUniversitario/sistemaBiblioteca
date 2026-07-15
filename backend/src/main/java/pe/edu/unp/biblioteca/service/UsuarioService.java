@@ -61,6 +61,18 @@ public class UsuarioService {
         return usuarioDao.listarTodos();
     }
 
+    public List<pe.edu.unp.biblioteca.dto.UsuarioListDTO> listarLectores() {
+        return usuarioDao.listarLectores();
+    }
+
+    public List<pe.edu.unp.biblioteca.dto.UsuarioListDTO> listarBibliotecarios() {
+        return usuarioDao.listarBibliotecarios();
+    }
+
+    public List<pe.edu.unp.biblioteca.dto.UsuarioListDTO> listarAdministradores() {
+        return usuarioDao.listarAdministradores();
+    }
+
     public pe.edu.unp.biblioteca.dto.UsuarioListDTO obtenerPorId(Integer id, String rol) {
         return usuarioDao.obtenerPorId(id, rol);
     }

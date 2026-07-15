@@ -114,6 +114,10 @@ async function guardarFacultad() {
         }
         modalFacultadInstance.hide();
         cargarFacultades();
+        cargarEstadisticas();
+        if (typeof cargarOpcionesFacultades === 'function') {
+            cargarOpcionesFacultades();
+        }
     } catch (error) {
         alert('Error al guardar: ' + error.message);
     }
@@ -130,6 +134,10 @@ async function confirmarEliminarFacultad() {
         await fetchApi(`/facultades/${id}`, 'DELETE');
         modalEliminarInstance.hide();
         cargarFacultades();
+        cargarEstadisticas();
+        if (typeof cargarOpcionesFacultades === 'function') {
+            cargarOpcionesFacultades();
+        }
     } catch (error) {
         alert('Error al eliminar: ' + (error.message || 'Error desconocido'));
     }

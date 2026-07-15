@@ -69,6 +69,17 @@ public class AutorDao {
         jdbcCall.execute(in);
     }
 
+    public List<AutorDTO> buscarPorApellido(String apellido) {
+        return jdbcTemplate.query("CALL sp_buscar_autores_por_apellido(?)", (rs, rowNum) -> {
+            AutorDTO dto = new AutorDTO();
+            dto.setIdAutor(rs.getInt("id_autor"));
+            dto.setNombre(rs.getString("nombre"));
+            dto.setApellido(rs.getString("apellido"));
+            dto.setNacionalidad(rs.getString("nacionalidad"));
+            return dto;
+        }, apellido);
+    }
+
     public void eliminarAutor(Integer idAutor) {
         SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
                 .withProcedureName("sp_eliminar_autor");

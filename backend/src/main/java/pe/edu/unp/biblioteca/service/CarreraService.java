@@ -18,6 +18,10 @@ public class CarreraService {
         return carreraDao.listarCarreras();
     }
 
+    public List<CarreraDTO> listarCarrerasPorFacultad(Integer idFacultad) {
+        return carreraDao.listarCarrerasPorFacultad(idFacultad);
+    }
+
     public CarreraDTO obtenerPorId(Integer id) {
         return carreraDao.obtenerPorId(id);
     }

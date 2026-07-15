@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/prestamos")
-@CrossOrigin(origins = "*")
 public class PrestamoController {
 
     @Autowired
@@ -21,6 +20,11 @@ public class PrestamoController {
     @GetMapping("/activos")
     public ResponseEntity<List<PrestamoDTO>> listarPrestamosActivos() {
         return ResponseEntity.ok(prestamoService.listarPrestamosActivos());
+    }
+
+    @GetMapping("/lector/{id}")
+    public ResponseEntity<List<PrestamoDTO>> listarPrestamosPorLector(@PathVariable Integer id) {
+        return ResponseEntity.ok(prestamoService.listarPrestamosPorLector(id));
     }
 
     @PostMapping

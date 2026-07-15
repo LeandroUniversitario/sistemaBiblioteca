@@ -109,4 +109,8 @@ public class LibroService {
     public List<AutorDTO> listarAutoresPorLibro(Integer idLibro) {
         return libroDao.listarAutoresPorLibro(idLibro);
     }
+
+    public List<LibroDTO> listarLibrosPorAutor(Integer idAutor) {
+        return libroDao.listarLibrosPorAutor(idAutor);
+    }
 }

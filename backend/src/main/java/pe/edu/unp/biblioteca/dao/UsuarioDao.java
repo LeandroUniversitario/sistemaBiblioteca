@@ -140,4 +140,64 @@ public class UsuarioDao {
         String sql = "UPDATE usuario SET password_hash = ? WHERE id_usuario = ?";
         return jdbcTemplate.update(sql, newPasswordHash, idUsuario);
     }
+
+    public List<UsuarioListDTO> listarLectores() {
+        return jdbcTemplate.query("CALL sp_listar_lectores()", new RowMapper<UsuarioListDTO>() {
+            @Override
+            public UsuarioListDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                UsuarioListDTO dto = new UsuarioListDTO();
+                dto.setIdUsuario(rs.getInt("id_usuario"));
+                dto.setNombre(rs.getString("nombre"));
+                dto.setApellido(rs.getString("apellido"));
+                dto.setEmail(rs.getString("email"));
+                dto.setDocumentoIdentidad(rs.getString("documento_identidad"));
+                dto.setTelefono(rs.getString("telefono"));
+                dto.setEstado(rs.getString("estado"));
+                dto.setRol("lector");
+                dto.setCodigo(rs.getString("codigo_universitario"));
+                dto.setTipoLector(rs.getString("tipo_lector"));
+                dto.setNombreCarrera(rs.getString("nombre_carrera"));
+                dto.setNombreFacultad(rs.getString("nombre_facultad"));
+                return dto;
+            }
+        });
+    }
+
+    public List<UsuarioListDTO> listarBibliotecarios() {
+        return jdbcTemplate.query("CALL sp_listar_bibliotecarios()", new RowMapper<UsuarioListDTO>() {
+            @Override
+            public UsuarioListDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                UsuarioListDTO dto = new UsuarioListDTO();
+                dto.setIdUsuario(rs.getInt("id_usuario"));
+                dto.setNombre(rs.getString("nombre"));
+                dto.setApellido(rs.getString("apellido"));
+                dto.setEmail(rs.getString("email"));
+                dto.setDocumentoIdentidad(rs.getString("documento_identidad"));
+                dto.setTelefono(rs.getString("telefono"));
+                dto.setEstado(rs.getString("estado"));
+                dto.setRol("bibliotecario");
+                dto.setCodigo(rs.getString("codigo_bibliotecario"));
+                return dto;
+            }
+        });
+    }
+
+    public List<UsuarioListDTO> listarAdministradores() {
+        return jdbcTemplate.query("CALL sp_listar_administradores()", new RowMapper<UsuarioListDTO>() {
+            @Override
+            public UsuarioListDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                UsuarioListDTO dto = new UsuarioListDTO();
+                dto.setIdUsuario(rs.getInt("id_usuario"));
+                dto.setNombre(rs.getString("nombre"));
+                dto.setApellido(rs.getString("apellido"));
+                dto.setEmail(rs.getString("email"));
+                dto.setDocumentoIdentidad(rs.getString("documento_identidad"));
+                dto.setTelefono(rs.getString("telefono"));
+                dto.setEstado(rs.getString("estado"));
+                dto.setRol("administrador");
+                dto.setCodigo(rs.getString("codigo_administrador"));
+                return dto;
+            }
+        });
+    }
 }

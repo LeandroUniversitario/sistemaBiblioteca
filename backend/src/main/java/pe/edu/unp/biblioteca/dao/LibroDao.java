@@ -139,4 +139,13 @@ public class LibroDao {
             return dto;
         }, idLibro);
     }
+    public List<LibroDTO> listarLibrosPorAutor(Integer idAutor) {
+        return jdbcTemplate.query("CALL sp_listar_libros_por_autor(?)", (rs, rowNum) -> {
+            LibroDTO dto = new LibroDTO();
+            dto.setIdLibro(rs.getInt("id_libro"));
+            dto.setTitulo(rs.getString("titulo"));
+            dto.setIsbn(rs.getString("isbn"));
+            return dto;
+        }, idAutor);
+    }
 }

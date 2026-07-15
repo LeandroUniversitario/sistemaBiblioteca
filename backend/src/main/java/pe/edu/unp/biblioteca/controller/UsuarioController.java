@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@CrossOrigin(origins = "*")
 public class UsuarioController {
 
     @Autowired
@@ -30,6 +29,21 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<List<pe.edu.unp.biblioteca.dto.UsuarioListDTO>> listarTodos() {
         return ResponseEntity.ok(usuarioService.listarTodos());
+    }
+
+    @GetMapping("/lectores")
+    public ResponseEntity<List<pe.edu.unp.biblioteca.dto.UsuarioListDTO>> listarLectores() {
+        return ResponseEntity.ok(usuarioService.listarLectores());
+    }
+
+    @GetMapping("/bibliotecarios")
+    public ResponseEntity<List<pe.edu.unp.biblioteca.dto.UsuarioListDTO>> listarBibliotecarios() {
+        return ResponseEntity.ok(usuarioService.listarBibliotecarios());
+    }
+
+    @GetMapping("/administradores")
+    public ResponseEntity<List<pe.edu.unp.biblioteca.dto.UsuarioListDTO>> listarAdministradores() {
+        return ResponseEntity.ok(usuarioService.listarAdministradores());
     }
 
     @GetMapping("/{id}")

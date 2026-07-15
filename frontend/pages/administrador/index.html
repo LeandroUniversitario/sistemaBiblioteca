@@ -36,7 +36,13 @@
           <a class="nav-link text-light-50 hover-glow" href="#" id="linkCarreras"><i class="bi bi-mortarboard me-1"></i> Carreras</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link text-light-50 hover-glow" href="#" id="linkEmpresa"><i class="bi bi-building-gear me-1"></i> Institución</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link text-light-50 hover-glow" href="#" id="linkUsuarios"><i class="bi bi-people me-1"></i> Usuarios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light-50 hover-glow" href="#" id="linkParametros"><i class="bi bi-gear me-1"></i> Parámetros</a>
         </li>
       </ul>
       <div class="d-flex align-items-center gap-3">
@@ -129,6 +135,40 @@
         </div>
     </div>
 
+    <!-- Panel Empresa -->
+    <div id="panelEmpresa" class="glass-card p-4 d-none tab-transition">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold text-white mb-0">Datos de la Institución</h4>
+        </div>
+        <div id="empresaAlert" class="alert d-none text-center" role="alert"></div>
+        <form id="formEmpresa" class="row g-3" onsubmit="event.preventDefault();">
+            <input type="hidden" id="empresaId">
+            <div class="col-md-6">
+                <label class="form-label text-light-50 small">Razón Social</label>
+                <input type="text" class="form-control custom-input bg-transparent text-white border-secondary" id="empresaRazonSocial" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label text-light-50 small">RUC</label>
+                <input type="text" class="form-control custom-input bg-transparent text-white border-secondary" id="empresaRuc" required>
+            </div>
+            <div class="col-md-12">
+                <label class="form-label text-light-50 small">Dirección</label>
+                <input type="text" class="form-control custom-input bg-transparent text-white border-secondary" id="empresaDireccion" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label text-light-50 small">Teléfono de Contacto</label>
+                <input type="text" class="form-control custom-input bg-transparent text-white border-secondary" id="empresaTelefono">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label text-light-50 small">URL Logo</label>
+                <input type="text" class="form-control custom-input bg-transparent text-white border-secondary" id="empresaLogo">
+            </div>
+            <div class="col-12 text-end mt-4">
+                <button type="button" class="btn btn-primary custom-btn" onclick="actualizarEmpresa()"><i class="bi bi-save"></i> Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+
     <!-- Panel de Usuarios -->
     <div id="panelUsuarios" class="glass-card p-4 d-none tab-transition">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -156,6 +196,33 @@
             </table>
         </div>
     </div>
+
+    <!-- Panel de Parametros -->
+    <div id="panelParametros" class="glass-card p-4 d-none tab-transition">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold text-white mb-0">Parámetros del Sistema</h4>
+            <button class="btn btn-primary custom-btn" onclick="abrirModalParametro()"><i class="bi bi-plus-lg"></i> Nuevo Parámetro</button>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-glass align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Valor</th>
+                        <th>Descripción</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyParametros">
+                    <tr>
+                        <td colspan="5" class="text-center text-white-50 py-3">Cargando parámetros...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
     <!-- Modal Facultad -->
@@ -167,7 +234,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formFacultad">
+                    <form id="formFacultad" onsubmit="event.preventDefault(); guardarFacultad();">
                         <input type="hidden" id="facultadId">
                         <div class="mb-3">
                             <label class="form-label text-light-50 small">Nombre de la Facultad</label>
@@ -210,7 +277,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formCarrera">
+                    <form id="formCarrera" onsubmit="event.preventDefault(); guardarCarrera();">
                         <input type="hidden" id="carreraId">
                         <div class="mb-3">
                             <label class="form-label text-light-50 small">Nombre de la Carrera</label>
@@ -241,7 +308,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formRegistroUsuario">
+                    <form id="formRegistroUsuario" onsubmit="event.preventDefault(); guardarUsuario();">
                         <div id="registroAlert" class="alert d-none text-center" role="alert" style="border-radius: 12px; font-size: 0.9rem;"></div>
                         <input type="hidden" id="usuarioId">
                         
@@ -363,7 +430,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="passwordAlert" class="alert d-none text-center" role="alert" style="border-radius: 12px; font-size: 0.9rem;"></div>
-                    <form id="formCambiarPassword">
+                    <form id="formCambiarPassword" onsubmit="event.preventDefault(); cambiarPasswordUsuario();">
                         <input type="hidden" id="passwordUsuarioId">
                         <div class="mb-3">
                             <label class="form-label text-light-50 small">Nueva Contraseña</label>
@@ -374,6 +441,39 @@
                 <div class="modal-footer border-secondary border-opacity-50">
                     <button type="button" class="btn btn-outline-secondary text-white border-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary custom-btn" onclick="guardarNuevaPassword()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Parametro -->
+    <div class="modal fade" id="modalParametro" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white">
+                <div class="modal-header border-secondary border-opacity-50">
+                    <h5 class="modal-title fw-bold" id="modalParametroTitle">Nuevo Parámetro</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formParametro" onsubmit="event.preventDefault(); guardarParametro();">
+                        <input type="hidden" id="parametroId">
+                        <div class="mb-3">
+                            <label class="form-label text-light-50 small">Nombre del Parámetro</label>
+                            <input type="text" class="form-control custom-input bg-transparent text-white border-secondary" id="parametroNombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-light-50 small">Valor</label>
+                            <input type="text" class="form-control custom-input bg-transparent text-white border-secondary" id="parametroValor" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-light-50 small">Descripción</label>
+                            <textarea class="form-control custom-input bg-transparent text-white border-secondary" id="parametroDescripcion" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-50">
+                    <button type="button" class="btn btn-outline-secondary text-white border-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary custom-btn" id="btnGuardarParametro" onclick="guardarParametro()">Guardar</button>
                 </div>
             </div>
         </div>
@@ -404,5 +504,15 @@
 <script src="facultades.js"></script>
 <script src="carreras.js"></script>
 <script src="usuarios.js"></script>
+<script src="empresa.js"></script>
+<script src="parametros.js"></script>
+    <!-- Prevent Bootstrap modal aria-hidden focus warnings -->
+    <script>
+        document.addEventListener('hide.bs.modal', function () {
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+        });
+    </script>
 </body>
 </html>

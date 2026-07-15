@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/carreras")
-@CrossOrigin(origins = "*")
 public class CarreraController {
 
     @Autowired
@@ -20,6 +19,12 @@ public class CarreraController {
     @GetMapping
     public ResponseEntity<List<CarreraDTO>> listarCarreras() {
         List<CarreraDTO> carreras = carreraService.listarCarreras();
+        return ResponseEntity.ok(carreras);
+    }
+
+    @GetMapping("/facultad/{id}")
+    public ResponseEntity<List<CarreraDTO>> listarCarrerasPorFacultad(@PathVariable Integer id) {
+        List<CarreraDTO> carreras = carreraService.listarCarrerasPorFacultad(id);
         return ResponseEntity.ok(carreras);
     }
 

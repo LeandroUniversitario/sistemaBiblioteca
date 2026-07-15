@@ -149,6 +149,15 @@ function confirmarDevolucion(idPrestamo, titulo, lector) {
 async function ejecutarDevolucion() {
     const idPrestamo = document.getElementById('devolucionPrestamoId').value;
     const alertDiv = document.getElementById('devolucionAlert');
+    
+    const btnConfirmar = document.querySelector('#modalDevolucion .btn-primary');
+    const btnCancelar = document.querySelector('#modalDevolucion .btn-outline-secondary');
+    
+    if (btnConfirmar) {
+        btnConfirmar.disabled = true;
+        btnConfirmar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...';
+    }
+    if (btnCancelar) btnCancelar.disabled = true;
 
     try {
         const result = await fetchApi(`/prestamos/${idPrestamo}/devolucion`, 'POST');
@@ -159,9 +168,19 @@ async function ejecutarDevolucion() {
         setTimeout(() => {
             bootstrap.Modal.getInstance(document.getElementById('modalDevolucion')).hide();
             cargarPrestamosActivos();
+            if (btnConfirmar) {
+                btnConfirmar.disabled = false;
+                btnConfirmar.innerHTML = 'Confirmar';
+            }
+            if (btnCancelar) btnCancelar.disabled = false;
         }, 2500);
     } catch (error) {
         mostrarAlerta(alertDiv, error.message, 'danger');
+        if (btnConfirmar) {
+            btnConfirmar.disabled = false;
+            btnConfirmar.innerHTML = 'Confirmar';
+        }
+        if (btnCancelar) btnCancelar.disabled = false;
     }
 }
 

@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/autores")
-@CrossOrigin(origins = "*")
 public class AutorController {
 
     @Autowired
@@ -20,6 +19,11 @@ public class AutorController {
     @GetMapping
     public ResponseEntity<List<AutorDTO>> listarTodos() {
         return ResponseEntity.ok(autorService.listarTodos());
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<AutorDTO>> buscarPorApellido(@RequestParam String apellido) {
+        return ResponseEntity.ok(autorService.buscarPorApellido(apellido));
     }
 
     @GetMapping("/{id}")
