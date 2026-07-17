@@ -7,7 +7,7 @@
 -- ejecutar este bloque, y vuélvelo a  ;  al terminar.
 -- =========================================================
 
-USE biblioteca_db;
+USE sistemabiblioteca;
 
 DELIMITER $$
 
@@ -426,6 +426,44 @@ BEGIN
     INNER JOIN administrador a ON a.id_usuario = u.id_usuario
     INNER JOIN estado e ON e.id_estado = u.id_estado
     WHERE u.id_usuario = p_id_usuario;
+END$$
+
+-- =========================================================
+-- Procedimiento para restablecer contraseña
+-- =========================================================
+DROP PROCEDURE IF EXISTS sp_restablecer_password$$
+CREATE PROCEDURE sp_restablecer_password (
+    IN p_email VARCHAR(100),
+    IN p_documento VARCHAR(20),
+    IN p_nuevo_hash VARCHAR(255),
+    OUT p_resultado INT,
+    OUT p_mensaje VARCHAR(255)
+)
+BEGIN
+    DECLARE v_id_usuario INT;
+    DECLARE v_id_estado_activo INT;
+    DECLARE v_estado_actual INT;
+
+    SELECT id_estado INTO v_id_estado_activo FROM estado WHERE entidad = 'usuario' AND codigo = 'activo' LIMIT 1;
+
+    SELECT id_usuario, id_estado INTO v_id_usuario, v_estado_actual 
+    FROM usuario 
+    WHERE email = p_email AND documento_identidad = p_documento;
+
+    IF v_id_usuario IS NULL THEN
+        SET p_resultado = 0;
+        SET p_mensaje = 'El correo o documento de identidad no coinciden.';
+    ELSEIF v_estado_actual != v_id_estado_activo THEN
+        SET p_resultado = 0;
+        SET p_mensaje = 'El usuario se encuentra inactivo.';
+    ELSE
+        UPDATE usuario 
+        SET password_hash = p_nuevo_hash 
+        WHERE id_usuario = v_id_usuario;
+        
+        SET p_resultado = 1;
+        SET p_mensaje = 'Contraseña restablecida exitosamente.';
+    END IF;
 END$$
 
 DELIMITER ;

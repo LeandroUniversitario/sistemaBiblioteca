@@ -23,4 +23,16 @@ public class AuthDao {
 
         return jdbcCall.execute(in);
     }
+
+    public Map<String, Object> restablecerPassword(String email, String documento, String nuevoHash) {
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName("sp_restablecer_password");
+
+        MapSqlParameterSource in = new MapSqlParameterSource()
+                .addValue("p_email", email)
+                .addValue("p_documento", documento)
+                .addValue("p_nuevo_hash", nuevoHash);
+
+        return jdbcCall.execute(in);
+    }
 }

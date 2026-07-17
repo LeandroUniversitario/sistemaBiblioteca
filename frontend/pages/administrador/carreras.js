@@ -134,6 +134,11 @@ async function guardarCarrera() {
         if (typeof cargarEstadisticas === 'function') {
             cargarEstadisticas();
         }
+        
+        // Actualizar el combobox del modal de usuarios
+        if (typeof cargarCarrerasEnSelect === 'function') {
+            cargarCarrerasEnSelect();
+        }
     } catch (error) {
         alert('Error al guardar: ' + error.message);
     }
@@ -154,6 +159,11 @@ async function confirmarEliminarCarrera() {
         // Refrescar estadísticas
         if (typeof cargarEstadisticas === 'function') {
             cargarEstadisticas();
+        }
+        
+        // Actualizar el combobox del modal de usuarios
+        if (typeof cargarCarrerasEnSelect === 'function') {
+            cargarCarrerasEnSelect();
         }
     } catch (error) {
         alert('Error al eliminar: ' + (error.message || 'Error desconocido'));

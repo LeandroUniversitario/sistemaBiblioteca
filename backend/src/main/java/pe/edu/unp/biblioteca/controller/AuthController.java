@@ -25,4 +25,10 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
+
+    @PostMapping("/restablecer-password")
+    public ResponseEntity<pe.edu.unp.biblioteca.dto.GenericResponseDTO> restablecerPassword(@RequestBody pe.edu.unp.biblioteca.dto.RestablecerPasswordDTO request) {
+        pe.edu.unp.biblioteca.dto.GenericResponseDTO response = authService.restablecerPassword(request);
+        return ResponseEntity.ok(response);
+    }
 }

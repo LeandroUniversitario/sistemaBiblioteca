@@ -72,4 +72,34 @@ public class AuthService {
 
         return response;
     }
+
+    public pe.edu.unp.biblioteca.dto.GenericResponseDTO restablecerPassword(pe.edu.unp.biblioteca.dto.RestablecerPasswordDTO request) {
+        pe.edu.unp.biblioteca.dto.GenericResponseDTO response = new pe.edu.unp.biblioteca.dto.GenericResponseDTO();
+
+        System.out.println("Restablecer Password DEBUG: Email=" + request.getEmail() + ", Documento=" + request.getDocumentoIdentidad() + ", NuevaPassword=" + request.getNuevaPassword());
+
+        if (request.getEmail() == null || request.getDocumentoIdentidad() == null || request.getNuevaPassword() == null) {
+            response.setSuccess(false);
+            response.setMessage("El correo, el documento de identidad y la nueva contraseña son obligatorios.");
+            return response;
+        }
+
+        // El nuevo hash será la contraseña proveída
+        String nuevoHash = BCrypt.hashpw(request.getNuevaPassword(), BCrypt.gensalt());
+
+        Map<String, Object> dbResult = authDao.restablecerPassword(request.getEmail(), request.getDocumentoIdentidad(), nuevoHash);
+
+        Integer resultado = (Integer) dbResult.get("p_resultado");
+        String mensaje = (String) dbResult.get("p_mensaje");
+
+        if (resultado != null && resultado == 1) {
+            response.setSuccess(true);
+            response.setMessage(mensaje);
+        } else {
+            response.setSuccess(false);
+            response.setMessage(mensaje != null ? mensaje : "Error desconocido al restablecer la contraseña.");
+        }
+
+        return response;
+    }
 }

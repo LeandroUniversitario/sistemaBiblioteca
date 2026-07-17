@@ -136,6 +136,9 @@ function abrirModalUsuario() {
     document.getElementById('usuarioId').value = '';
     document.getElementById('modalUsuarioTitle').innerText = 'Nuevo Usuario';
     
+    // Recargar las carreras para que el combobox esté actualizado
+    cargarCarrerasEnSelect();
+    
     // Habilitar campos que no se pueden editar después
     document.getElementById('regEmail').disabled = false;
     document.getElementById('regDni').disabled = false;
