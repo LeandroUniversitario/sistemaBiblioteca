@@ -5,3 +5,19 @@ backend/apache-maven-*/
 .vscode/
 *.log
 .DS_Store
+
+# Seguridad
+.env
+.env.*
+
+# Java / Spring Boot
+*.class
+*.jar
+*.war
+*.ear
+.classpath
+.project
+.settings/
+
+# Frontend (si llegas a usar NPM/Node)
+node_modules/
