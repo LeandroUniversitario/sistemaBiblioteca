@@ -61,21 +61,28 @@
     <h2 class="page-title">Gestión de Biblioteca</h2>
     
     <div class="row g-4 mt-2 mb-5">
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center position-relative overflow-hidden">
+                <i class="bi bi-collection stat-card-icon text-info"></i>
+                <h3 class="fw-bold text-white mb-0" id="statTitulosDisponibles">...</h3>
+                <p class="text-light-50 mb-0">Títulos Disponibles</p>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="glass-card p-4 text-center position-relative overflow-hidden">
                 <i class="bi bi-book stat-card-icon text-primary"></i>
                 <h3 class="fw-bold text-white mb-0" id="statLibrosDisponibles">...</h3>
-                <p class="text-light-50 mb-0">Libros Disponibles</p>
+                <p class="text-light-50 mb-0">Ejemplares Disponibles</p>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="glass-card p-4 text-center">
                 <i class="bi bi-bookmark-star stat-card-icon text-warning"></i>
                 <h3 class="fw-bold text-white mb-0" id="statPrestamosActivos">...</h3>
                 <p class="text-light-50 mb-0">Préstamos Activos</p>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="glass-card p-4 text-center">
                 <i class="bi bi-exclamation-triangle stat-card-icon text-danger"></i>
                 <h3 class="fw-bold text-white mb-0" id="statDevolucionesAtrasadas">...</h3>
@@ -678,6 +685,7 @@
             const res = await fetch('http://localhost:8080/api/dashboard/stats-bibliotecario');
             if(res.ok) {
                 const data = await res.json();
+                document.getElementById('statTitulosDisponibles').textContent = data.titulosDisponibles;
                 document.getElementById('statLibrosDisponibles').textContent = data.librosDisponibles;
                 document.getElementById('statPrestamosActivos').textContent = data.prestamosActivos;
                 document.getElementById('statDevolucionesAtrasadas').textContent = data.devolucionesAtrasadas;

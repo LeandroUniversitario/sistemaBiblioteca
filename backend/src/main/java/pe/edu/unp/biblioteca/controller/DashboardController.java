@@ -47,14 +47,17 @@ public class DashboardController {
             Map<String, Object> result = jdbcTemplate.queryForMap("CALL sp_dashboard_bibliotecario_stats()");
             
             Number librosDisponibles = (Number) result.get("librosDisponibles");
+            Number titulosDisponibles = (Number) result.get("titulosDisponibles");
             Number prestamosActivos = (Number) result.get("prestamosActivos");
             Number devolucionesAtrasadas = (Number) result.get("devolucionesAtrasadas");
 
             stats.put("librosDisponibles", librosDisponibles != null ? librosDisponibles.intValue() : 0);
+            stats.put("titulosDisponibles", titulosDisponibles != null ? titulosDisponibles.intValue() : 0);
             stats.put("prestamosActivos", prestamosActivos != null ? prestamosActivos.intValue() : 0);
             stats.put("devolucionesAtrasadas", devolucionesAtrasadas != null ? devolucionesAtrasadas.intValue() : 0);
         } catch (Exception e) {
             stats.put("librosDisponibles", 0);
+            stats.put("titulosDisponibles", 0);
             stats.put("prestamosActivos", 0);
             stats.put("devolucionesAtrasadas", 0);
         }

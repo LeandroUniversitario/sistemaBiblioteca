@@ -8,11 +8,17 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS sp_dashboard_bibliotecario_stats$$
 CREATE PROCEDURE sp_dashboard_bibliotecario_stats ()
 BEGIN
-    DECLARE v_libros_disponibles INT;
+    DECLARE v_ejemplares_disponibles INT;
+    DECLARE v_titulos_disponibles INT;
     DECLARE v_prestamos_activos INT;
     DECLARE v_devoluciones_atrasadas INT;
 
-    SELECT COUNT(*) INTO v_libros_disponibles 
+    SELECT COUNT(*) INTO v_ejemplares_disponibles 
+    FROM ejemplar ej 
+    JOIN estado e ON ej.id_estado = e.id_estado 
+    WHERE e.entidad='ejemplar' AND e.codigo='disponible';
+    
+    SELECT COUNT(DISTINCT ej.id_libro) INTO v_titulos_disponibles 
     FROM ejemplar ej 
     JOIN estado e ON ej.id_estado = e.id_estado 
     WHERE e.entidad='ejemplar' AND e.codigo='disponible';
@@ -28,7 +34,8 @@ BEGIN
     WHERE e.entidad='prestamo' AND e.codigo='activo' AND p.fecha_limite < NOW();
 
     SELECT 
-        v_libros_disponibles AS librosDisponibles, 
+        v_ejemplares_disponibles AS librosDisponibles, 
+        v_titulos_disponibles AS titulosDisponibles,
         v_prestamos_activos AS prestamosActivos, 
         v_devoluciones_atrasadas AS devolucionesAtrasadas;
 END$$
