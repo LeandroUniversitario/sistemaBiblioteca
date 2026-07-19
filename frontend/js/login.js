@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSpinner.classList.remove('d-none');
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnResetSpinner.classList.remove('d-none');
 
             try {
-                const response = await fetch('http://localhost:8080/api/auth/restablecer-password', {
+                const response = await fetch(`${API_BASE_URL}/auth/restablecer-password`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, documentoIdentidad, nuevaPassword })
