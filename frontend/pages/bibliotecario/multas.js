@@ -1,4 +1,4 @@
-// Variables globales para modales
+﻿// Variables globales para modales
 let modalPagarMulta = null;
 
 document.addEventListener('DOMContentLoaded', () => {

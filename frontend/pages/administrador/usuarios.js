@@ -199,7 +199,7 @@ async function editarUsuario(id, rol) {
 }
 
 async function guardarUsuario(e) {
-    e.preventDefault();
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
     const id = document.getElementById('usuarioId').value;
     const alertEl = document.getElementById('registroAlert');
     const btnSubmit = document.getElementById('btnGuardarUsuario');
@@ -225,8 +225,16 @@ async function guardarUsuario(e) {
 
     if (payload.rol === 'lector') {
         payload.tipoLector = document.getElementById('regTipoLector').value;
-        payload.codigoUniversitario = document.getElementById('regCodigoUniv').value;
-        payload.idCarrera = document.getElementById('regIdCarrera').value;
+        let cod = document.getElementById('regCodigoUniv').value;
+        
+        // Si no escribe código, usamos su DNI como código por defecto para evitar duplicados
+        if (!cod || cod.trim() === '') {
+            cod = document.getElementById('regDni').value;
+        }
+        payload.codigoUniversitario = cod;
+        
+        const carreraVal = document.getElementById('regIdCarrera').value;
+        payload.idCarrera = (carreraVal && carreraVal.trim() !== '') ? parseInt(carreraVal, 10) : null;
     }
 
     try {
@@ -238,6 +246,7 @@ async function guardarUsuario(e) {
         }
         
         alertEl.textContent = res.message || 'Operación exitosa.';
+        alertEl.classList.remove('alert-danger');
         alertEl.classList.add('alert-success');
         alertEl.classList.remove('d-none');
         
@@ -249,6 +258,7 @@ async function guardarUsuario(e) {
         
     } catch (error) {
         alertEl.textContent = error.message || 'Ocurrió un error inesperado.';
+        alertEl.classList.remove('alert-success');
         alertEl.classList.add('alert-danger');
         alertEl.classList.remove('d-none');
     } finally {

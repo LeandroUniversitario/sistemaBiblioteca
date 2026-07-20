@@ -1,4 +1,4 @@
-// libros.js
+﻿// libros.js
 
 let modalLibroInstance = null;
 let modalEjemplarInstance = null;
@@ -8,7 +8,7 @@ let listaAutoresGlobal = [];
 
 window.cargarLibros = async function() {
     try {
-        const response = await fetch('http://localhost:8080/api/libros');
+        const response = await fetch('https://unp-biblioteca-api.loca.lt/api/libros');
         if (!response.ok) throw new Error('Error al cargar libros');
         const libros = await response.json();
         
@@ -69,7 +69,7 @@ window.cargarLibros = async function() {
 async function cargarOpcionesSelects() {
     try {
         // Cargar Categorías
-        const resCat = await fetch('http://localhost:8080/api/categorias');
+        const resCat = await fetch('https://unp-biblioteca-api.loca.lt/api/categorias');
         const categorias = await resCat.json();
         const selectCat = document.getElementById('libroCategoria');
         selectCat.innerHTML = '<option value="">Seleccione...</option>';
@@ -78,7 +78,7 @@ async function cargarOpcionesSelects() {
         });
 
         // Cargar Autores (Para Choices.js)
-        const resAut = await fetch('http://localhost:8080/api/autores');
+        const resAut = await fetch('https://unp-biblioteca-api.loca.lt/api/autores');
         listaAutoresGlobal = await resAut.json();
         
         const selectAutores = document.getElementById('libroAutores');
@@ -128,7 +128,7 @@ window.abrirModalLibro = async function() {
 
 window.editarLibro = async function(libroRow) {
     try {
-        const response = await fetch(`http://localhost:8080/api/libros/${libroRow.idLibro}`);
+        const response = await fetch(`https://unp-biblioteca-api.loca.lt/api/libros/${libroRow.idLibro}`);
         if (!response.ok) throw new Error("Error al obtener libro");
         const libro = await response.json();
 
@@ -190,7 +190,7 @@ window.guardarLibro = async function() {
         editorial: editorial || null
     };
 
-    const url = 'http://localhost:8080/api/libros';
+    const url = 'https://unp-biblioteca-api.loca.lt/api/libros';
     const method = id ? 'PUT' : 'POST';
 
     try {
@@ -208,7 +208,7 @@ window.guardarLibro = async function() {
             
             if (targetLibroId && autoresSeleccionados.length > 0) {
                 for (const idAutor of autoresSeleccionados) {
-                    await fetch(`http://localhost:8080/api/libros/${targetLibroId}/autores/${idAutor}`, {
+                    await fetch(`https://unp-biblioteca-api.loca.lt/api/libros/${targetLibroId}/autores/${idAutor}`, {
                         method: 'POST'
                     });
                 }
@@ -228,7 +228,7 @@ window.guardarLibro = async function() {
 window.eliminarLibro = async function(id) {
     if (confirm("¿Estás seguro de dar de baja este libro? Los ejemplares podrían verse afectados.")) {
         try {
-            const response = await fetch(`http://localhost:8080/api/libros/${id}/baja`, {
+            const response = await fetch(`https://unp-biblioteca-api.loca.lt/api/libros/${id}/baja`, {
                 method: 'PUT'
             });
             const result = await response.json();
@@ -247,7 +247,7 @@ window.eliminarLibro = async function(id) {
 window.reactivarLibro = async function(id) {
     if (confirm("¿Estás seguro de reactivar este libro?")) {
         try {
-            const response = await fetch(`http://localhost:8080/api/libros/${id}/reactivar`, {
+            const response = await fetch(`https://unp-biblioteca-api.loca.lt/api/libros/${id}/reactivar`, {
                 method: 'PUT'
             });
             const result = await response.json();
@@ -282,7 +282,7 @@ window.verEjemplares = async function(libroId) {
 
 async function cargarEjemplaresList(libroId) {
     try {
-        const response = await fetch(`http://localhost:8080/api/ejemplares/libro/${libroId}`);
+        const response = await fetch(`https://unp-biblioteca-api.loca.lt/api/ejemplares/libro/${libroId}`);
         const ejemplares = await response.json();
         
         const tbody = document.querySelector('#tablaEjemplaresList tbody');
@@ -335,7 +335,7 @@ window.agregarEjemplar = async function() {
     };
 
     try {
-        const response = await fetch('http://localhost:8080/api/ejemplares', {
+        const response = await fetch('https://unp-biblioteca-api.loca.lt/api/ejemplares', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -357,7 +357,7 @@ window.agregarEjemplar = async function() {
 window.cambiarEstadoEjemplar = async function(idEjemplar, nuevoEstado) {
     if (confirm(`¿Marcar este ejemplar como ${nuevoEstado}?`)) {
         try {
-            const response = await fetch(`http://localhost:8080/api/ejemplares/${idEjemplar}/estado?estado=${nuevoEstado}`, {
+            const response = await fetch(`https://unp-biblioteca-api.loca.lt/api/ejemplares/${idEjemplar}/estado?estado=${nuevoEstado}`, {
                 method: 'PUT'
             });
             const result = await response.json();

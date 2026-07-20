@@ -1,4 +1,4 @@
-let parametrosGlobal = [];
+﻿let parametrosGlobal = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     const linkParametros = document.getElementById('linkParametros');

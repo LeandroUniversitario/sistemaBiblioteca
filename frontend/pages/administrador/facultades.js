@@ -1,4 +1,4 @@
-let modalFacultadInstance;
+﻿let modalFacultadInstance;
 let modalEliminarInstance;
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,5 +1,5 @@
 // Base URL del API Backend
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://unp-biblioteca-api.loca.lt/api';
 
 /**
  * Función genérica para hacer peticiones al backend
@@ -26,7 +26,7 @@ async function fetchApi(endpoint, method = 'GET', body = null) {
         
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.error || `Error HTTP: ${response.status}`);
+            throw new Error(errorData.message || errorData.error || `Error HTTP: ${response.status}`);
         }
 
         // Si es 204 No Content u otro código 200 sin cuerpo, no fallamos

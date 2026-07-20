@@ -1,4 +1,4 @@
-let modalCarreraInstance;
+﻿let modalCarreraInstance;
 let modalEliminarCarreraInstance;
 
 // Asumiendo que la navegación ya existe en index.html o se maneja en otro script

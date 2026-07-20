@@ -167,7 +167,7 @@ async function cargarLibrosRecomendados(query = '') {
             }
         } else {
             if (tituloSeccion) {
-                tituloSeccion.innerHTML = `<i class="bi bi-stars text-warning me-2"></i>Recomendados para ti`;
+                tituloSeccion.innerHTML = `<i class="bi bi-collection text-warning me-2"></i>Catálogo de Libros`;
             }
         }
 
@@ -178,8 +178,8 @@ async function cargarLibrosRecomendados(query = '') {
 
         contenedor.innerHTML = '';
         
-        // Mostrar hasta 8 libros si no hay búsqueda, o todos los resultados si hay búsqueda
-        const recomendados = query.trim() !== '' ? librosDisponibles : librosDisponibles.slice(0, 8);
+        // Mostrar todos los resultados
+        const recomendados = librosDisponibles;
 
         recomendados.forEach((libro, index) => {
             const gradient = gradients[index % gradients.length];

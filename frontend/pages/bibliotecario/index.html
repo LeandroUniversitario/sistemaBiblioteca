@@ -1,6 +1,18 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+const originalFetch = window.fetch;
+window.fetch = async function() {
+    let [resource, config] = arguments;
+    if(typeof resource === 'string' && resource.includes('loca.lt')) {
+        config = config || {};
+        config.headers = config.headers || {};
+        config.headers['Bypass-Tunnel-Reminder'] = 'true';
+    }
+    return originalFetch(resource, config);
+};
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Bibliotecario - Biblioteca</title>
@@ -682,7 +694,7 @@
 
     async function cargarEstadisticasDashboard() {
         try {
-            const res = await fetch('http://localhost:8080/api/dashboard/stats-bibliotecario');
+            const res = await fetch('https://unp-biblioteca-api.loca.lt/api/dashboard/stats-bibliotecario');
             if(res.ok) {
                 const data = await res.json();
                 document.getElementById('statTitulosDisponibles').textContent = data.titulosDisponibles;
@@ -697,7 +709,7 @@
 
     async function cargarPrestamosRecientes() {
         try {
-            const res = await fetch('http://localhost:8080/api/dashboard/prestamos-recientes');
+            const res = await fetch('https://unp-biblioteca-api.loca.lt/api/dashboard/prestamos-recientes');
             if(res.ok) {
                 const data = await res.json();
                 const tbody = document.getElementById('tbodyPrestamosRecientes');
@@ -736,7 +748,7 @@
 
     async function cargarAlertasVencimiento() {
         try {
-            const res = await fetch('http://localhost:8080/api/dashboard/alertas-vencimiento');
+            const res = await fetch('https://unp-biblioteca-api.loca.lt/api/dashboard/alertas-vencimiento');
             if (res.ok) {
                 const alertas = await res.json();
                 const tbody = document.getElementById('tbodyAlertasVencimiento');

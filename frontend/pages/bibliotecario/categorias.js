@@ -1,4 +1,4 @@
-// categorias.js
+﻿// categorias.js
 let modalCategoriaInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.cargarCategorias = async function() {
     try {
-        const response = await fetch('http://localhost:8080/api/categorias');
+        const response = await fetch('https://unp-biblioteca-api.loca.lt/api/categorias');
         if (!response.ok) throw new Error('Error al cargar categorías');
         const data = await response.json();
         
@@ -80,7 +80,7 @@ window.guardarCategoria = async function() {
     };
 
     const method = id ? 'PUT' : 'POST';
-    const url = id ? `http://localhost:8080/api/categorias/${id}` : 'http://localhost:8080/api/categorias';
+    const url = id ? `https://unp-biblioteca-api.loca.lt/api/categorias/${id}` : 'https://unp-biblioteca-api.loca.lt/api/categorias';
 
     try {
         const response = await fetch(url, {
@@ -107,7 +107,7 @@ window.eliminarCategoria = async function(id) {
     if (!confirm('¿Está seguro de eliminar esta categoría?')) return;
     
     try {
-        const response = await fetch(`http://localhost:8080/api/categorias/${id}`, {
+        const response = await fetch(`https://unp-biblioteca-api.loca.lt/api/categorias/${id}`, {
             method: 'DELETE'
         });
         

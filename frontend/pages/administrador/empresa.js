@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     // Configurar menú de navegación para Empresa
     const linkEmpresa = document.getElementById('linkEmpresa');
     if (linkEmpresa) {

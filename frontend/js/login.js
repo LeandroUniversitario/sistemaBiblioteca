@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const loginAlert = document.getElementById('loginAlert');
     const btnLogin = document.getElementById('btnLogin');

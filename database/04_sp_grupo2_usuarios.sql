@@ -64,6 +64,10 @@ BEGIN
         IF p_tipo_lector = 'estudiante' AND p_id_carrera IS NULL THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Un lector de tipo estudiante debe tener una carrera asignada.';
         END IF;
+
+        IF p_tipo_lector = 'estudiante' AND (p_codigo_universitario IS NULL OR TRIM(p_codigo_universitario) = '') THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Un estudiante debe tener obligatoriamente un código universitario.';
+        END IF;
     END IF;
 
     SELECT id_estado INTO v_id_estado_activo
@@ -104,8 +108,14 @@ BEGIN
 
             -- 2. Bifurcación según el rol para insertar en las tablas hijas
             IF p_rol = 'lector' THEN
+                IF p_codigo_universitario IS NULL OR TRIM(p_codigo_universitario) = '' THEN
+                    SET v_codigo_generado = CONCAT('L', LPAD(p_id_usuario, 6, '0'));
+                ELSE
+                    SET v_codigo_generado = p_codigo_universitario;
+                END IF;
+
                 INSERT INTO lector (id_usuario, codigo_universitario, id_carrera, tipo_lector)
-                VALUES (p_id_usuario, p_codigo_universitario, p_id_carrera, p_tipo_lector);
+                VALUES (p_id_usuario, v_codigo_generado, p_id_carrera, p_tipo_lector);
 
             ELSEIF p_rol = 'bibliotecario' THEN
                 SET v_codigo_generado = CONCAT('B', LPAD(p_id_usuario, 3, '0'));

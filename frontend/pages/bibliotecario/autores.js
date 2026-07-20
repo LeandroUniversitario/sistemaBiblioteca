@@ -1,4 +1,4 @@
-// autores.js
+﻿// autores.js
 let modalAutorInstance = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.cargarAutores = async function() {
     try {
-        const response = await fetch('http://localhost:8080/api/autores');
+        const response = await fetch('https://unp-biblioteca-api.loca.lt/api/autores');
         if (!response.ok) throw new Error('Error al cargar autores');
         const data = await response.json();
         
@@ -82,7 +82,7 @@ window.guardarAutor = async function() {
     };
 
     const method = id ? 'PUT' : 'POST';
-    const url = id ? `http://localhost:8080/api/autores/${id}` : 'http://localhost:8080/api/autores';
+    const url = id ? `https://unp-biblioteca-api.loca.lt/api/autores/${id}` : 'https://unp-biblioteca-api.loca.lt/api/autores';
 
     try {
         const response = await fetch(url, {
@@ -109,7 +109,7 @@ window.eliminarAutor = async function(id) {
     if (!confirm('¿Está seguro de eliminar este autor?')) return;
     
     try {
-        const response = await fetch(`http://localhost:8080/api/autores/${id}`, {
+        const response = await fetch(`https://unp-biblioteca-api.loca.lt/api/autores/${id}`, {
             method: 'DELETE'
         });
         
